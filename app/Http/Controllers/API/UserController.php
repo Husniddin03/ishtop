@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     public function index()
     {
         $users = User::with(['wallet', 'connections', 'locations', 'works'])->paginate(15);
