@@ -22,27 +22,26 @@ class WorkVideoController extends Controller
     // POST /works/{work}/videos
     public function store(StoreWorkVideoRequest $request, Work $work)
     {
-        $uploadedVideos = [];
 
-        if ($request->hasFile('videos')) {
-            foreach ($request->file('videos') as $photo) {
-                // Faylni saqlash
-                $path = $photo->store('work_videos', 'public');
+        if ($request->hasFile('video')) {
+            $video = $request->file('video');
+            $path = $video->store('work_videos', 'public');
 
-                // Database ga saqlash
-                $workPhoto = WorkVideo::create([
-                    'work_id' => $work->id,
-                    'url' => $path
-                ]);
+            $workvideo = WorkVideo::create([
+                'work_id' => $work->id,
+                'url' => $path
+            ]);
 
-                $uploadedVideos[] = $workPhoto;
-            }
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $workvideo
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Not saved',
+            ], 201);
         }
-
-        return response()->json([
-            'message' => 'Success',
-            'data' => $uploadedVideos
-        ], 201);
     }
 
     // GET /works/{work}/videos/{video}

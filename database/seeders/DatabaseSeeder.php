@@ -9,6 +9,7 @@ use App\Models\Wallet;
 use App\Models\UserLocation;
 use App\Models\Work;
 use App\Models\WorkConnection;
+use App\Models\Worker;
 use App\Models\WorkLocation;
 use App\Models\WorkPhoto;
 use App\Models\WorkVideo;
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UserConnection::factory(3)->create(['user_id'=>$user->id]);
             Wallet::factory(1)->create(['user_id'=>$user->id]);
             UserLocation::factory(2)->create(['user_id'=>$user->id]);
+            Worker::factory(2)->create(['user_id'=>$user->id]);
         });
 
         Work::factory(20)->create()->each(function($work){

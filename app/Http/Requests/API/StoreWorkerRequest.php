@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWorkPhotoRequest extends FormRequest
+class StoreWorkerRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
-    
+
     public function rules(): array
     {
         return [
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'ican' => 'required|string',
+            'finish_time' => 'nullable|date_format:H:i|required_with:start_time|after:start_time',
         ];
     }
 }

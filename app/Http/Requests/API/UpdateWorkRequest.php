@@ -15,9 +15,9 @@ class UpdateWorkRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:255',
-            'type' => 'nullable|string|max:255',
-            'descrition' => 'nullable|string',
-            'date' => 'nullable|date',
+            'type' => 'sometimes|nullable|string|max:255',
+            'descrition' => 'sometimes|nullable|string',
+            'date' => 'sometimes|nullable|date',
         ];
     }
 }

@@ -14,8 +14,7 @@ class StoreWorkVideoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'videos' => 'required|array|min:1|max:3',
-            'videos.*' => 'file|max:51200' // 
+            'video' => 'file|max:51200' // 
         ];
     }
 }

@@ -22,27 +22,26 @@ class WorkPhotoController extends Controller
 
     public function store(StoreWorkPhotoRequest $request, Work $work)
     {
-        $uploadedPhotos = [];
 
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                // Faylni saqlash
-                $path = $photo->store('work_photos', 'public');
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $path = $photo->store('work_photos', 'public');
 
-                // Database ga saqlash
-                $workPhoto = WorkPhoto::create([
-                    'work_id' => $work->id,
-                    'url' => $path
-                ]);
+            $workPhoto = WorkPhoto::create([
+                'work_id' => $work->id,
+                'url' => $path
+            ]);
 
-                $uploadedPhotos[] = $workPhoto;
-            }
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $workPhoto
+            ], 201);
+        } else{
+            return response()->json([
+                'message' => 'Not saved',
+            ], 201);
         }
-
-        return response()->json([
-            'message' => 'Success',
-            'data' => $uploadedPhotos
-        ], 201);
     }
 
     // GET /works/{work}/photos/{photo}

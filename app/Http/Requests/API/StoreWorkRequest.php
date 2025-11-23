@@ -14,7 +14,6 @@ class StoreWorkRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'type' => 'nullable|string|max:255',
             'descrition' => 'nullable|string',

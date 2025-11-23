@@ -44,6 +44,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('workers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('ican');
+            $table->time('start_time')->nullable();
+            $table->time('finish_time')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('work_connections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('work_id')->constrained('works')->onDelete('cascade');
@@ -84,6 +93,7 @@ return new class extends Migration
         Schema::dropIfExists('wallet');
         Schema::dropIfExists('user_locations');
         Schema::dropIfExists('works');
+        Schema::dropIfExists('worker');
         Schema::dropIfExists('work_connections');
         Schema::dropIfExists('work_locations');
         Schema::dropIfExists('work_photos');

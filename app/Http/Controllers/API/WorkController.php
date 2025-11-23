@@ -9,6 +9,7 @@ use App\Http\Resources\API\WorkCollection;
 use App\Http\Resources\API\WorkResource;
 use App\Models\Work;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WorkController extends Controller
 {
@@ -20,7 +21,9 @@ class WorkController extends Controller
 
     public function store(StoreWorkRequest $request)
     {
-        $work = Work::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = Auth::id();
+        $work = Work::create($data);
         return new WorkResource($work->load(['connections','locations','photos','videos']));
     }
 
