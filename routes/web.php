@@ -1,13 +1,12 @@
 <?php
 
+use App\Http\Controllers\WEB\PageController;
 use App\Http\Controllers\WEB\UserController;
 use App\Http\Controllers\WEB\WorkController;
 use App\Http\Controllers\WEB\WorkerController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PageController::class, 'index']);
 
 // Users Routes
 Route::resource('users', UserController::class);
@@ -44,3 +43,4 @@ Route::delete('work-videos/{video}', [WorkController::class, 'destroyVideo'])->n
 
 // Workers Routes
 Route::resource('workers', WorkerController::class);
+Route::resource('pages', PageController::class);
