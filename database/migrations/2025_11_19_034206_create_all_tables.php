@@ -6,97 +6,107 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('user_connections', function (Blueprint $table) {
+        // wallets
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->float('balanse')->default(0);
+            $table->timestamps();
+        });
+
+        // cardData
+        Schema::create('card_data', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('number');
+            $table->date('date');
             $table->string('name');
-            $table->string('url')->nullable();
+            $table->string('phone');
             $table->timestamps();
         });
 
-        Schema::create('wallet', function (Blueprint $table) {
+        // userContacts
+        Schema::create('user_contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->integer('balance')->default(0);
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('phone')->nullable();
+            $table->string('telegram')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
             $table->timestamps();
         });
 
-         Schema::create('user_locations', function (Blueprint $table) {
+        // userData
+        Schema::create('user_data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->double('latitude');
-            $table->double('longitude');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('gender')->nullable();
+            $table->float('height')->nullable();
+            $table->float('weight')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('region')->nullable();
+            $table->string('address')->nullable();
+            $table->float('latitude')->nullable();
+            $table->float('longitude')->nullable();
             $table->timestamps();
         });
 
-         Schema::create('works', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('type')->nullable();
-            $table->text('descrition')->nullable();   // Sizdagi nom qoldirildi
-            $table->date('date')->nullable();
-            $table->timestamps();
-        });
-
+        // workers
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('ican');
-            $table->time('start_time')->nullable();
-            $table->time('finish_time')->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
-        Schema::create('work_connections', function (Blueprint $table) {
+        // works
+        Schema::create('works', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_id')->constrained('works')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('url')->nullable();
+            $table->string('type');
+            $table->float('price');
+            $table->integer('how_much_people');
+            $table->string('gender')->nullable();
+            $table->integer('age')->nullable();
+            $table->boolean('lunch')->default(false);
+            $table->text('description')->nullable();
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('region')->nullable();
+            $table->string('address')->nullable();
+            $table->float('latitude')->nullable();
+            $table->float('longitude')->nullable();
+            $table->date('when');
+            $table->time('start_time');
+            $table->time('finish_time');
+            $table->integer('duration'); // kunlarda
             $table->timestamps();
         });
 
-        Schema::create('work_locations', function (Blueprint $table) {
+        // work_images
+        Schema::create('work_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_id')->constrained('works')->onDelete('cascade');
-            $table->double('latitude');
-            $table->double('longitude');
-            $table->timestamps();
-        });
-
-        Schema::create('work_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('work_id')->constrained('works')->onDelete('cascade');
-            $table->string('url');
-            $table->timestamps();
-        });
-
-        Schema::create('work_videos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('work_id')->constrained('works')->onDelete('cascade');
-            $table->string('url');
+            $table->foreignId('work_id')->constrained('works')->cascadeOnDelete();
+            $table->string('image');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('user_connections');
-        Schema::dropIfExists('wallet');
-        Schema::dropIfExists('user_locations');
+        Schema::dropIfExists('work_images');
         Schema::dropIfExists('works');
-        Schema::dropIfExists('worker');
-        Schema::dropIfExists('work_connections');
-        Schema::dropIfExists('work_locations');
-        Schema::dropIfExists('work_photos');
-        Schema::dropIfExists('work_videos');
+        Schema::dropIfExists('workers');
+        Schema::dropIfExists('user_data');
+        Schema::dropIfExists('user_contacts');
+        Schema::dropIfExists('card_data');
+        Schema::dropIfExists('wallets');
+        Schema::dropIfExists('users');
     }
 };

@@ -7,15 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Worker extends Model
 {
+
     use HasFactory;
 
-
-    protected $fillable = [
-        'user_id',
-        'ican',
-        'start_time',
-        'finish_time',
-    ];
+    protected $fillable = ['user_id'];
 
     public function user()
     {

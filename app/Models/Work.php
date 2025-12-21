@@ -7,40 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Work extends Model
 {
+
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'user_id',
-        'type',
-        'descrition',
-        'date',
+        'user_id','name','type','price','how_much_people',
+        'gender','age','lunch','description',
+        'country','province','region','address',
+        'latitude','longitude',
+        'when','start_time','finish_time','duration'
     ];
 
-    /** RELATIONS */
-
-    public function connections()
-    {
-        return $this->hasMany(WorkConnection::class);
-    }
-
-    public function locations()
-    {
-        return $this->hasMany(WorkLocation::class);
-    }
-
-    public function photos()
-    {
-        return $this->hasMany(WorkPhoto::class);
-    }
-
-    public function videos()
-    {
-        return $this->hasMany(WorkVideo::class);
-    }
+    protected $casts = [
+        'lunch' => 'boolean',
+        'when'  => 'date'
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(WorkImage::class);
     }
 }

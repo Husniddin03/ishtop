@@ -1,10 +1,10 @@
 <?php
-
+// database/factories/WalletFactory.php
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Wallet;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WalletFactory extends Factory
 {
@@ -14,7 +14,7 @@ class WalletFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'balance' => $this->faker->numberBetween(0, 10000),
+            'balanse' => fake()->randomFloat(2, 0, 10000),
         ];
     }
 }
