@@ -12,7 +12,7 @@ class WorkController extends Controller
      */
     public function index()
     {
-        //
+        return view('work.index');
     }
 
     /**
@@ -36,7 +36,7 @@ class WorkController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('work.show', compact('id'));
     }
 
     /**

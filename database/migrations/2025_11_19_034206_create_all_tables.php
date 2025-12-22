@@ -82,6 +82,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
+            $table->integer('read_time')->default(0);
             $table->date('when');
             $table->time('start_time');
             $table->time('finish_time');

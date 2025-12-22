@@ -13,7 +13,7 @@ class Work extends Model
     protected $fillable = [
         'user_id','name','type','price','how_much_people',
         'gender','age','lunch','description',
-        'country','province','region','address',
+        'country','province','region','address', 'read_time',
         'latitude','longitude',
         'when','start_time','finish_time','duration'
     ];
