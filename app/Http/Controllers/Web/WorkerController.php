@@ -36,7 +36,7 @@ class WorkerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('worker.show', compact('id'));
     }
 
     /**

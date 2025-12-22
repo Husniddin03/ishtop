@@ -13,7 +13,7 @@ class UserData extends Model
     protected $table = 'user_data';
 
     protected $fillable = [
-        'user_id','first_name','last_name','gender',
+        'user_id','first_name','last_name','gender', 'bio',
         'height','weight','birthday',
         'country','province','region','address',
         'latitude','longitude'

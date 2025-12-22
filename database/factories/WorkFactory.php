@@ -35,6 +35,7 @@ class WorkFactory extends Factory
             'start_time' => $startTime,
             'finish_time' => $finishTime,
             'duration' => fake()->numberBetween(1, 30),
+            'read_time' => random_int(0, 1000),
         ];
     }
 }

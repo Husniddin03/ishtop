@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="ml-3">
                                             <p class="text-sm font-medium text-gray-900">Yosh</p>
-                                            <p class="text-sm text-gray-600">{{ $work->age }} yoshdan yuqori</p>
+                                            <p class="text-sm text-gray-600">{{ $work->age }} yosh atrofi</p>
                                         </div>
                                     </div>
                                 @endif
@@ -190,7 +190,7 @@
                                             </svg>
                                             <div>
                                                 <p class="text-sm font-medium text-gray-900">Davomiyligi</p>
-                                                <p class="text-lg font-bold text-indigo-600">{{ $work->duration }}
+                                                <p class="text-lg font-bold text-indigo-600">{{ $work->duration }} kun
                                                 </p>
                                             </div>
                                         </div>
@@ -298,7 +298,7 @@
                                 </div>
                                 @if ($work->read_time)
                                     <div class="flex justify-between">
-                                        <span>O'qish vaqti:</span>
+                                        <span>Ko'rishlar soni:</span>
                                         <span class="font-medium">{{ $work->read_time }}</span>
                                     </div>
                                 @endif

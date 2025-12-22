@@ -64,4 +64,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function userData()
+    {
+        return $this->hasOne(UserData::class);
+    }
+    public function userContact()
+    {
+        return $this->hasOne(UserContact::class);
+    }
+    public function worker()
+    {
+        return $this->hasOne(Worker::class);
+    }
+
+    public function works()
+    {
+        return $this->hasMany(Work::class);
+    }
 }

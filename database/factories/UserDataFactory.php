@@ -27,6 +27,7 @@ class UserDataFactory extends Factory
             'address' => fake()->optional()->address(),
             'latitude' => fake()->optional()->latitude(39, 43),
             'longitude' => fake()->optional()->longitude(56, 73),
+            'bio' => fake()->optional()->paragraph(),
         ];
     }
 }
