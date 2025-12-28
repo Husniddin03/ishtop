@@ -20,7 +20,7 @@ class WorkController extends Controller
      */
     public function create()
     {
-        //
+        return view('work.create');
     }
 
     /**
