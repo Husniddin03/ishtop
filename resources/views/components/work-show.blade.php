@@ -1,19 +1,3 @@
-<x-slot name="header">
-    <div class="flex items-center justify-between">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $work->name }}
-        </h2>
-        <a href="{{ route('works.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                    clip-rule="evenodd" />
-            </svg>
-            Orqaga
-        </a>
-    </div>
-</x-slot>
-
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">

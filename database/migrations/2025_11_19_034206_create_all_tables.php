@@ -98,6 +98,34 @@ return new class extends Migration
             $table->string('image');
             $table->timestamps();
         });
+
+        // Schema::create('regions', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('soato_id')->nullable();
+        //     $table->string('name_uz', 60)->nullable();
+        //     $table->string('name_oz', 60)->nullable();
+        //     $table->string('name_ru', 60)->nullable();
+        // });
+
+        // Schema::create('districts', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('region_id');
+        //     $table->unsignedBigInteger('soato_id')->nullable();
+        //     $table->string('name_uz', 100)->nullable();
+        //     $table->string('name_oz', 100)->nullable();
+        //     $table->string('name_ru', 100)->nullable();
+        //     $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade')->onUpdate('cascade');
+        // });
+
+        // Schema::create('villages', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('soato_id')->nullable();
+        //     $table->unsignedBigInteger('district_id');
+        //     $table->string('name_uz', 100)->nullable();
+        //     $table->string('name_oz', 100)->nullable();
+        //     $table->string('name_ru', 100)->nullable();
+        //     $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade')->onUpdate('cascade');
+        // });
     }
 
     public function down(): void
@@ -110,5 +138,8 @@ return new class extends Migration
         Schema::dropIfExists('card_data');
         Schema::dropIfExists('wallets');
         Schema::dropIfExists('users');
+        // Schema::dropIfExists('regions');
+        // Schema::dropIfExists('districts');
+        // Schema::dropIfExists('villages');
     }
 };
