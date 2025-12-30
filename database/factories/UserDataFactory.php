@@ -21,13 +21,14 @@ class UserDataFactory extends Factory
             'height' => fake()->optional()->randomFloat(2, 150, 200),
             'weight' => fake()->optional()->randomFloat(2, 50, 120),
             'birthday' => fake()->optional()->dateTimeBetween('-60 years', '-18 years'),
-            'country' => fake()->optional()->country(),
-            'province' => fake()->optional()->state(),
-            'region' => fake()->optional()->city(),
-            'address' => fake()->optional()->address(),
+            'country' => $this->faker->country(),
+            'region' => $this->faker->state(),
+            'district' => $this->faker->city(),
+            'village' => $this->faker->citySuffix(),
+            'address' => $this->faker->address(),
             'latitude' => fake()->optional()->latitude(39, 43),
             'longitude' => fake()->optional()->longitude(56, 73),
-            'bio' => fake()->optional()->paragraph(),
+            'bio' => $this->faker->paragraph(),
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\Region;
+use App\Models\Village;
 use App\Models\Work;
 use App\Models\WorkImage;
 use Illuminate\Http\Request;
@@ -26,16 +28,12 @@ class WorkController extends Controller
 
     public function create()
     {
-        // Viloyatlarni districts va villages bilan yuklash
-        $regions = Region::with(['districts.villages'])->get();
-
-        return view('work.create', compact('regions'));
+        return view('work.create');
     }
 
     public function store(Request $request)
     {
 
-        dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:100',
@@ -46,12 +44,10 @@ class WorkController extends Controller
             'description' => 'nullable|string',
             'lunch' => 'nullable|boolean',
             'country' => 'required|string',
-            'province' => 'required|exists:regions,id',
-            'district' => 'nullable|exists:districts,id',
-            'region' => 'nullable|string|max:255',
+            'region' => 'required',
+            'district' => 'required',
+            'village' => 'required',
             'address' => 'nullable|string|max:500',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
             'when' => 'required|date',
             'start_time' => 'required',
             'finish_time' => 'required',
@@ -71,11 +67,10 @@ class WorkController extends Controller
             'description' => $validated['description'] ?? null,
             'lunch' => $request->has('lunch'),
             'country' => $validated['country'],
-            'province' => $validated['province'],
-            'region' => $validated['region'] ?? null,
+            'region' => is_numeric($validated['region']) ? Region::where('id', $validated['region'])->first()->name_uz : $validated['region'],
+            'district' => is_numeric($validated['district']) ? District::where('id', $validated['district'])->first()->name_uz : $validated['district'],
+            'village' => is_numeric($validated['village']) ? Village::where('id', $validated['village'])->first()->name_uz : $validated['village'],
             'address' => $validated['address'] ?? null,
-            'latitude' => $validated['latitude'] ?? null,
-            'longitude' => $validated['longitude'] ?? null,
             'when' => $validated['when'],
             'start_time' => $validated['start_time'],
             'finish_time' => $validated['finish_time'],
@@ -85,17 +80,22 @@ class WorkController extends Controller
         // Rasmlarni saqlash
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('work_images', 'public');
+                if ($image->isValid()) {
+                    $path = $image->store('work_images', 'public');
 
-                WorkImage::create([
-                    'work_id' => $work->id,
-                    'image_path' => $path,
-                ]);
+                    WorkImage::create([
+                        'work_id' => $work->id,
+                        'image' => $path,
+                    ]);
+                }
             }
         }
 
+        // Save the work model to ensure all data is persisted
+        $work->save();
+
         return redirect()
-            ->route('work.index')
+            ->route('works.show', $work->id)
             ->with('success', 'Ish muvaffaqiyatli yaratildi!');
     }
 

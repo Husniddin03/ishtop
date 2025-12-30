@@ -8,13 +8,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
                         <!-- Asosiy rasm -->
                         <div class="md:col-span-2">
-                            <img src="{{ Storage::url($work->images->first()->path) }}" alt="{{ $work->name }}"
+                            <img src="{{ Storage::url($work->images->first()->image) }}" alt="{{ $work->name }}"
                                 class="w-full h-96 object-cover rounded-lg shadow-lg">
                         </div>
                         <!-- Qo'shimcha rasmlar -->
                         @foreach ($work->images->skip(1) as $image)
                             <div>
-                                <img src="{{ Storage::url($image->path) }}" alt="{{ $work->name }}"
+                                <img src="{{ Storage::url($image->image) }}" alt="{{ $work->name }}"
                                     class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow">
                             </div>
                         @endforeach
@@ -239,12 +239,16 @@
                                             </svg>
                                             <div class="text-sm text-gray-700">
                                                 <p class="font-medium">{{ $work->country }}</p>
-                                                @if ($work->province)
-                                                    <p>{{ $work->province }}</p>
-                                                @endif
                                                 @if ($work->region)
                                                     <p>{{ $work->region }}</p>
                                                 @endif
+                                                @if ($work->district)
+                                                    <p>{{ $work->district }}</p>
+                                                @endif
+                                                @if ($work->village)
+                                                    <p>{{ $work->village }}</p>
+                                                @endif
+                                                
                                                 @if ($work->address)
                                                     <p class="mt-1">{{ $work->address }}</p>
                                                 @endif

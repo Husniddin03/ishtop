@@ -11,6 +11,7 @@ class Village extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'district_id',
         'soato_id',
         'name_uz',

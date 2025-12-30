@@ -21,7 +21,7 @@
                             <div
                                 class="md:col-span-2 relative bg-gradient-to-br from-indigo-600 to-purple-700 min-h-[400px] md:min-h-[600px]">
                                 @if ($worker->user->avatar)
-                                    <img src="{{ $worker->user->avatar }}"
+                                    <img src="{{ Storage::url($worker->user->avatar) }}"
                                         alt="{{ $worker->user->userData->first_name ?? $worker->user->name }}"
                                         class="w-full h-full object-cover">
                                 @else

@@ -11,6 +11,7 @@ class District extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'region_id',
         'soato_id',
         'name_uz',

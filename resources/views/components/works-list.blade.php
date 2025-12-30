@@ -19,7 +19,7 @@
 
                             <!-- Rasm -->
                             @if ($work->images && $work->images->count() > 0)
-                                <img src="{{ Storage::url($work->images->first()->path) }}" alt="{{ $work->name }}"
+                                <img src="{{ Storage::url($work->images->first()->image) }}" alt="{{ $work->name }}"
                                     class="h-60 object-cover rounded-t-md" />
                             @else
                                 <img src="https://dummyimage.com/600x400/6366f1/ffffff&text={{ urlencode($work->name) }}"
@@ -126,7 +126,7 @@
                                 @endif
 
                                 <!-- Manzil -->
-                                @if ($work->country || $work->province || $work->region)
+                                @if ($work->country || $work->district || $work->region || $work->village || $work->address)
                                     <div class="mb-4 flex items-start text-sm text-gray-600">
                                         <svg class="w-4 h-4 mr-2 mt-0.5 text-gray-500" fill="currentColor"
                                             viewBox="0 0 20 20">
@@ -135,7 +135,7 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                         <span>
-                                            {{ collect([$work->region, $work->province, $work->country])->filter()->implode(', ') }}
+                                            {{ collect([$work->address, $work->village, $work->district, $work->region, $work->country])->filter()->implode(', ') }}
                                         </span>
                                     </div>
                                 @endif

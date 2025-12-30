@@ -12,6 +12,7 @@ class Region extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'soato_id',
         'name_uz',
         'name_oz',
