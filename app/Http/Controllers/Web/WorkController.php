@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\Region;
+use App\Models\User;
 use App\Models\Village;
 use App\Models\Work;
 use App\Models\WorkImage;
@@ -34,6 +35,11 @@ class WorkController extends Controller
     public function store(Request $request)
     {
 
+        $user = Auth::user();
+        if (!$user instanceof User) {
+            throw new \Exception('Authenticated user is not an instance of the User model.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:100',
@@ -53,6 +59,13 @@ class WorkController extends Controller
             'finish_time' => 'required',
             'duration' => 'required|integer|min:1|max:30',
             'images.*' => 'nullable|image|max:10240', // 10MB
+        ]);
+
+        $validated1 = $request->validate([
+            'phone' => 'required|string|max:20',
+            'telegram' => 'nullable|string|max:255',
+            'facebook' => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:255',
         ]);
 
         // Ishni yaratish
@@ -76,6 +89,16 @@ class WorkController extends Controller
             'finish_time' => $validated['finish_time'],
             'duration' => $validated['duration'],
         ]);
+
+        $user->userContact()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'phone' => $validated1['phone'],
+                'telegram' => $validated1['telegram'],
+                'facebook' => $validated1['facebook'],
+                'instagram' => $validated1['instagram'],
+            ]
+        );
 
         // Rasmlarni saqlash
         if ($request->hasFile('images')) {
@@ -104,6 +127,7 @@ class WorkController extends Controller
      */
     public function show(string $id)
     {
+        Work::findOrFail($id)->increment('read_count');
         return view('work.show', compact('id'));
     }
 

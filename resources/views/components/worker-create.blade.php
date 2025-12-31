@@ -158,7 +158,7 @@
                         <!-- Facebook -->
                         <div>
                             <label for="facebook" class="block text-sm font-medium text-gray-700">Facebook</label>
-                            <input id="facebook" name="facebook" type="url"
+                            <input id="facebook" name="facebook" type="text"
                                 value="{{ old('facebook', $userContact->facebook ?? '') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                 placeholder="https://facebook.com/username">
@@ -170,7 +170,7 @@
                         <!-- Instagram -->
                         <div>
                             <label for="instagram" class="block text-sm font-medium text-gray-700">Instagram</label>
-                            <input id="instagram" name="instagram" type="url"
+                            <input id="instagram" name="instagram" type="text"
                                 value="{{ old('instagram', $userContact->instagram ?? '') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                 placeholder="https://instagram.com/username">

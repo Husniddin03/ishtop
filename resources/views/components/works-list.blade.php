@@ -149,9 +149,8 @@
                                         <h6 class="text-sm font-bold text-gray-900">{{ $work->user->name }}</h6>
                                         <div class="flex flex-wrap items-center gap-x-2 text-xs text-gray-500">
                                             <span>{{ $work->created_at->format('d.m.Y') }}</span>
-                                            @if ($work->read_time)
-                                                <span>•</span>
-                                                <span>{{ $work->read_time }}</span>
+                                            @if ($work->read_count)
+                                                <span>👁️</span>    <span>{{ $work->read_count }}</span>
                                             @endif
                                         </div>
                                     </div>

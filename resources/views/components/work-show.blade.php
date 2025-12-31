@@ -284,10 +284,10 @@
                                     <span>Yangilangan:</span>
                                     <span class="font-medium">{{ $work->updated_at->diffForHumans() }}</span>
                                 </div>
-                                @if ($work->read_time)
+                                @if ($work->read_count)
                                     <div class="flex justify-between">
                                         <span>Ko'rishlar soni:</span>
-                                        <span class="font-medium">{{ $work->read_time }}</span>
+                                        <span class="font-medium">{{ $work->read_count }}</span>
                                     </div>
                                 @endif
                             </div>

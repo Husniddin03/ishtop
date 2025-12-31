@@ -261,6 +261,58 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <div class="md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">Bu ish bilan bog'lanish
+                            </h3>
+                        </div>
+
+                        <!-- Phone -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Telefon <span
+                                    class="text-red-500">*</span></label>
+                            <input id="phone" name="phone" type="text" required
+                                value="{{ old('phone', $userContact->phone ?? '') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            @error('phone')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Telegram -->
+                        <div>
+                            <label for="telegram" class="block text-sm font-medium text-gray-700">Telegram</label>
+                            <input id="telegram" name="telegram" type="text"
+                                value="{{ old('telegram', $userContact->telegram ?? '') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            @error('telegram')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Instagram -->
+                        <div>
+                            <label for="instagram" class="block text-sm font-medium text-gray-700">Instagram<span
+                                    class="text-red-500">*</span></label>
+                            <input id="instagram" name="instagram" type="text"
+                                value="{{ old('instagram', $userContact->instagram ?? '') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            @error('instagram')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Facebook --}}
+                        <div>
+                            <label for="facebook" class="block text-sm font-medium text-gray-700">Facebook
+                                <span class="text-red-500">*</span></label>
+                            <input id="facebook" name="facebook" type="text"
+                                value="{{ old('facebook', $userContact->facebook ?? '') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            @error('facebook')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Tugmalar -->
