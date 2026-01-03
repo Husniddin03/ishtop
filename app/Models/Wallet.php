@@ -7,13 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wallet extends Model
 {
-
     use HasFactory;
 
-    protected $fillable = ['user_id','balanse'];
+    protected $fillable = [
+        'user_id',
+        'balanse',
+    ];
 
+    /**
+     * Wallet belongs to a User
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Wallet has many CardData
+     */
+    public function cardData()
+    {
+        return $this->hasMany(CardData::class);
     }
 }

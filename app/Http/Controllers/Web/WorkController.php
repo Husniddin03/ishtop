@@ -19,7 +19,8 @@ class WorkController extends Controller
      */
     public function index()
     {
-        return view('work.index');
+        $works = Work::all();
+        return view('work.index', compact('works'));
     }
 
     /**
@@ -29,7 +30,8 @@ class WorkController extends Controller
 
     public function create()
     {
-        return view('work.create');
+        $regions = Region::all();
+        return view('work.create', compact('regions'));
     }
 
     public function store(Request $request)
@@ -128,7 +130,8 @@ class WorkController extends Controller
     public function show(string $id)
     {
         Work::findOrFail($id)->increment('read_count');
-        return view('work.show', compact('id'));
+        $work = Work::find($id);
+        return view('work.show', compact('work'));
     }
 
     /**

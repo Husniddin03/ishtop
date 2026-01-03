@@ -19,7 +19,7 @@ return new class extends Migration
         // cardData
         Schema::create('card_data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('wallet_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('number');
             $table->date('date');
             $table->string('name');
@@ -31,7 +31,7 @@ return new class extends Migration
         Schema::create('user_contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('phone')->nullable();
+            $table->string('phone');
             $table->string('telegram')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();

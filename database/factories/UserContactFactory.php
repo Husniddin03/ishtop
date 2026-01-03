@@ -15,7 +15,7 @@ class UserContactFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'phone' => fake()->optional()->numerify('+998#########'),
+            'phone' => $this->faker->numerify('+998#########'),
             'telegram' => fake()->optional()->userName(),
             'facebook' => fake()->optional()->url(),
             'instagram' => fake()->optional()->userName(),

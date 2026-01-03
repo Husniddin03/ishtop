@@ -8,14 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class CardData extends Model
 {
     use HasFactory;
-    protected $table = 'card_data';
 
     protected $fillable = [
-        'user_id','number','date','name','phone'
+        'wallet_id',
+        'number',
+        'date',
+        'name',
+        'phone',
     ];
 
-    public function user()
+    /**
+     * CardData belongs to a Wallet
+     */
+    public function wallet()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Wallet::class);
     }
 }

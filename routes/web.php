@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Web\UserContactController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\UserDataController;
@@ -26,3 +28,12 @@ Route::middleware('auth')->group(function () {
         'user-contacts' => UserContactController::class,
     ]);
 });
+
+Route::post('register', [RegisterController::class, 'store'])->name('register.store');
+
+
+Route::get('/verify-code', function () {
+    return view('verify.code');
+})->name('verify.code.form');
+
+Route::post('/verify-code', [RegisterController::class, 'verifyCode'])->name('verify.code');

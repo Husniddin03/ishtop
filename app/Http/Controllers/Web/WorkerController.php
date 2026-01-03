@@ -20,7 +20,8 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        return view('worker.index');
+        $workers = Worker::all();
+        return view('worker.index', compact('workers'));
     }
 
     /**
@@ -28,7 +29,14 @@ class WorkerController extends Controller
      */
     public function create()
     {
-        return view('worker.create');
+        $user = Auth::user();
+        if (!$user instanceof User) {
+            throw new \Exception('Authenticated user is not an instance of the User model.');
+        }
+        $userData = $user->userData;
+        $userContact = $user->userContact;
+        $regions = Region::all();
+        return view('worker.create', compact('userData', 'userContact', 'regions'));
     }
 
     /**
@@ -122,7 +130,8 @@ class WorkerController extends Controller
      */
     public function show(string $id)
     {
-        return view('worker.show', compact('id'));
+        $worker = Worker::find($id);
+        return view('worker.show', compact('worker'));
     }
 
     /**

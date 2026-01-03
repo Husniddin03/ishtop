@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->create([
+        $user1 = User::factory()->create([
             'name' => 'Husniddin',
             'email' => 'husniddin13124041@gmail.com',
             'password' => bcrypt(330440311),
@@ -29,10 +29,10 @@ class DatabaseSeeder extends Seeder
         // 10 ta oddiy user yaratish
         User::factory(10)->create()->each(function ($user) {
             // Har bir user uchun wallet yaratish
-            Wallet::factory()->create(['user_id' => $user->id]);
+            $q = Wallet::factory()->create(['user_id' => $user->id]);
 
             // Har bir user uchun card data yaratish
-            CardData::factory()->create(['user_id' => $user->id]);
+            CardData::factory()->create(['wallet_id' => $q->id]);
 
             // Har bir user uchun contact yaratish
             UserContact::factory()->create(['user_id' => $user->id]);
@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
         // 5 ta worker yaratish
         User::factory(5)->create()->each(function ($user) {
             // User uchun asosiy ma'lumotlar
-            Wallet::factory()->create(['user_id' => $user->id]);
-            CardData::factory()->create(['user_id' => $user->id]);
+            $we = Wallet::factory()->create(['user_id' => $user->id]);
+            CardData::factory()->create(['wallet_id' => $we->id]);
             UserContact::factory()->create(['user_id' => $user->id]);
             UserData::factory()->create(['user_id' => $user->id]);
 
@@ -56,8 +56,8 @@ class DatabaseSeeder extends Seeder
         // 20 ta work e'lon yaratish
         User::factory(8)->create()->each(function ($user) {
             // User uchun asosiy ma'lumotlar
-            Wallet::factory()->create(['user_id' => $user->id]);
-            CardData::factory()->create(['user_id' => $user->id]);
+            $w = Wallet::factory()->create(['user_id' => $user->id]);
+            CardData::factory()->create(['wallet_id' => $w->id]);
             UserContact::factory()->create(['user_id' => $user->id]);
             UserData::factory()->create(['user_id' => $user->id]);
 
@@ -75,11 +75,11 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        Wallet::factory()->create(['user_id' => $testUser->id, 'balanse' => 1000000]);
-        CardData::factory()->create(['user_id' => $testUser->id]);
-        UserContact::factory()->create(['user_id' => $testUser->id]);
-        UserData::factory()->create(['user_id' => $testUser->id]);
-        Worker::factory()->create(['user_id' => $testUser->id]);
+        $wallet = Wallet::factory()->create(['user_id' => $user1->id, 'balanse' => 100]);
+        CardData::factory()->create(['wallet_id' => $wallet->id]);
+        UserContact::factory()->create(['user_id' => $user1->id]);
+        UserData::factory()->create(['user_id' => $user1->id]);
+        Worker::factory()->create(['user_id' => $user1->id]);
 
         // Test user uchun bir nechta work yaratish
         Work::factory(3)->create(['user_id' => $testUser->id])->each(function ($work) {
