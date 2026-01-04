@@ -1,96 +1,463 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col md:flex-row items-center justify-between bg-white shadow-md rounded-lg p-4 gap-4">
-            <!-- Title -->
-            <h2 class="text-2xl font-bold text-gray-900 tracking-wide">
-                {{ __('Ishlar') }}
-            </h2>
+        <div class="bg-gradient-to-r from-white via-gray-50 to-white shadow-lg rounded-2xl p-4 md:p-6">
+            <!-- Header Content -->
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <!-- Title and Stats -->
+                <div class="flex-1">
+                    <h1
+                        class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-indigo-700 bg-clip-text text-transparent">
+                        {{ __('Ishlar') }}
+                    </h1>
+                    <p class="mt-2 text-gray-600 flex items-center gap-2">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-medium">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                            {{ $works->count() }} ta ish
+                        </span>
+                        <span class="text-sm">•</span>
+                        <span class="text-gray-500">Orzuingizdagi ishni toping</span>
+                    </p>
+                </div>
 
-            <!-- Search -->
-            <div class="relative w-full md:w-1/3">
-                <input type="search" name="search" id="search" placeholder="Qidirish..."
-                    class="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                <!-- Icon -->
-                <span class="absolute left-3 top-2.5 text-gray-400">
-                    🔍
-                </span>
+                <!-- Create Job Button -->
+                <a href="{{ route('works.create') }}"
+                    class="group relative inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <span>E'lon berish</span>
+                </a>
             </div>
-
-            <!-- Button -->
-            <a href="{{ route('works.create') }}" class="w-full md:w-auto">
-                <button
-                    class="w-full md:w-auto px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition">
-                    Elon berish
-                </button>
-            </a>
         </div>
-
-
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <section>
-                    <!-- Container -->
-                    <div class="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-                        <!-- Component -->
-                        <div class="flex flex-col items-center">
-                            <h2 class="text-center text-3xl font-bold md:text-5xl">
-                                O'zingizga mos ishlarni toping
-                            </h2>
-                            <p class="mb-8 mt-4 text-center text-sm text-gray-500 sm:text-base md:mb-12 lg:mb-16">
-                                Siz uchun eng yaxshi ish imkoniyatlarini kashf eting va orzuingizdagi ishga ega bo'ling!
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Advanced Search Panel -->
+            <div class="mb-8">
+                <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">Ish qidiruv filtrlari</h3>
+                                <p class="text-sm text-gray-500">Kerakli mezonlar bo'yicha ishlarni toping</p>
+                            </div>
+                        </div>
+                        <button id="resetFilters"
+                            class="text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">
+                            Filtrlarni tozalash
+                        </button>
+                    </div>
+
+                    <form id="searchForm" method="GET" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                            <!-- Location Filters -->
+                            <div class="space-y-4">
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        Manzil
+                                    </span>
+                                    <select name="region" id="region" data-placeholder="Viloyatni tanlang"
+                                        class="location-select mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <option value="">Viloyatni tanlang</option>
+                                        @foreach ($regions as $region)
+                                            <option value="{{ $region->name_uz }}"
+                                                data-districts='{{ $region->districts->map(function ($d) {
+                                                        return ['id' => $d->id, 'name' => $d->name_uz, 'villages' => $d->villages->pluck('name_uz')];
+                                                    })->toJson() }}'
+                                                {{ request('region') == $region->name_uz ? 'selected' : '' }}>
+                                                {{ $region->name_uz }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </label>
+
+                                <select name="district" id="district" data-placeholder="Tumanni tanlang"
+                                    class="location-select mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                    <option value="">Tumanni tanlang</option>
+                                    @if (request('district'))
+                                        <option value="{{ request('district') }}" selected>{{ request('district') }}
+                                        </option>
+                                    @endif
+                                </select>
+
+                                <select name="village" id="village" data-placeholder="Qishloqni tanlang"
+                                    class="location-select mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                    <option value="">Qishloqni tanlang</option>
+                                    @if (request('village'))
+                                        <option value="{{ request('village') }}" selected>{{ request('village') }}
+                                        </option>
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Job Type Filter -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                        </svg>
+                                        Ish turi
+                                    </span>
+                                    <select name="type"
+                                        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <option value="">Barcha turlar</option>
+                                        @foreach ($workTypes as $type => $workType)
+                                            <option value="{{ $type }}"
+                                                {{ request('type') == $type ? 'selected' : '' }}>
+                                                {{ $type }} ({{ count($workType) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </label>
+                            </div>
+
+                            <!-- Salary Range -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Maosh oralig'i
+                                    </span>
+                                    <div class="grid grid-cols-2 gap-3 mt-1">
+                                        <input type="number" name="min_price" placeholder="Min"
+                                            value="{{ request('min_price') }}"
+                                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <input type="number" name="max_price" placeholder="Max"
+                                            value="{{ request('max_price') }}"
+                                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Gender Filter -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 3.5a5.5 5.5 0 01-9.5-4.5V2a5.5 5.5 0 015.5 5.5z" />
+                                        </svg>
+                                        Jins
+                                    </span>
+                                    <select name="gender"
+                                        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <option value="">Barcha jinslar</option>
+                                        <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>
+                                            Erkak</option>
+                                        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>
+                                            Ayol</option>
+                                        <option value="any" {{ request('gender') == 'any' ? 'selected' : '' }}>
+                                            Farqi yo'q</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- Additional Filters -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
+                            <!-- Workers Count -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2">Ishchilar soni</span>
+                                    <input type="number" name="how_much_people"
+                                        value="{{ request('how_much_people') }}" placeholder="Necha kishi kerak?"
+                                        class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                </label>
+                            </div>
+
+                            <!-- Age Range -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2">Yosh oralig'i</span>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <input type="number" name="min_age" placeholder="Min yosh"
+                                            value="{{ request('min_age') }}"
+                                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <input type="number" name="max_age" placeholder="Max yosh"
+                                            value="{{ request('max_age') }}"
+                                            class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Lunch Option -->
+                            <div>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-gray-700 mb-2">Ovqatlanish</span>
+                                    <select name="lunch"
+                                        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 hover:border-gray-400">
+                                        <option value="">Farqi yo'q</option>
+                                        <option value="1" {{ request('lunch') == '1' ? 'selected' : '' }}>Tushlik
+                                            beriladi</option>
+                                        <option value="0" {{ request('lunch') == '0' ? 'selected' : '' }}>Tushlik
+                                            berilmaydi</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="pt-4 border-t border-gray-200">
+                            <div class="flex justify-end">
+                                <button type="submit"
+                                    class="group inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                    <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <span>Ishlarni qidirish</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Active Filters -->
+            @if (request()->anyFilled(['region', 'type', 'min_price', 'gender', 'district', 'village', 'how_much_people', 'lunch']))
+                <div class="mb-6">
+                    <div class="flex flex-wrap gap-2">
+                        @if (request('region'))
+                            <span
+                                class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                                {{ request('region') }}
+                                <button type="button" onclick="removeFilter('region')"
+                                    class="ml-1 hover:text-blue-900">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                        @endif
+
+                        @if (request('type'))
+                            <span
+                                class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium">
+                                {{ request('type') }}
+                                <button type="button" onclick="removeFilter('type')"
+                                    class="ml-1 hover:text-purple-900">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                        @endif
+
+                        @if (request('min_price') || request('max_price'))
+                            <span
+                                class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-green-100 text-green-800 text-sm font-medium">
+                                @if (request('min_price') && request('max_price'))
+                                    {{ number_format(request('min_price'), 0, '.', ' ') }} -
+                                    {{ number_format(request('max_price'), 0, '.', ' ') }} so'm
+                                @elseif(request('min_price'))
+                                    {{ number_format(request('min_price'), 0, '.', ' ') }} so'm dan
+                                @else
+                                    {{ number_format(request('max_price'), 0, '.', ' ') }} so'm gacha
+                                @endif
+                                <button type="button" onclick="removePriceFilter()"
+                                    class="ml-1 hover:text-green-900">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </span>
+                        @endif
+
+                        <!-- Show Clear All button if any filters active -->
+                        @if (request()->anyFilled(['region', 'type', 'min_price', 'gender', 'district', 'village', 'how_much_people', 'lunch']))
+                            <a href="{{ route('works.index') }}"
+                                class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-gray-100 text-gray-800 text-sm font-medium hover:bg-gray-200 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Barcha filtrlarni tozalash
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            <!-- Results Section -->
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <!-- Results Header -->
+                <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Topilgan ishlar</h2>
+                            <p class="text-sm text-gray-600 mt-1">
+                                @if ($works->count() > 0)
+                                    <span class="font-medium text-indigo-600">{{ $works->count() }}</span> ta ish
+                                    topildi
+                                @else
+                                    Hech qanday ish topilmadi
+                                @endif
                             </p>
-                            <!-- Content -->
-                            <div
-                                class="mb-6 grid gap-4 sm:grid-cols-2 sm:justify-items-stretch md:mb-10 md:grid-cols-3 lg:mb-12 lg:gap-6">
+                        </div>
+                        <div class="mt-3 sm:mt-0">
+                            <select id="sortSelect"
+                                class="block w-full sm:w-auto rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <option value="newest">Yangi e'lonlar</option>
+                                <option value="oldest">Eski e'lonlar</option>
+                                <option value="price_high">Yuqori maosh</option>
+                                <option value="price_low">Past maosh</option>
+                                <option value="most_viewed">Ko'p ko'rilgan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-                                @foreach ($works as $work)
-                                    <a href="{{ route('works.show', $work->id) }}"
-                                        class="flex flex-col gap-4 rounded-md border border-solid border-gray-300 px-4 py-8 md:p-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <!-- Jobs Grid -->
+                @if ($works->count() > 0)
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach ($works as $work)
+                                <a href="{{ route('works.show', $work->id) }}"
+                                    class="group relative bg-white rounded-2xl border border-gray-200 hover:border-indigo-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
 
-                                        <!-- Rasm -->
+                                    <!-- Premium Badge -->
+                                    @if ($work->is_featured)
+                                        <div class="absolute top-3 right-3 z-10">
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                                Premium
+                                            </span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Job Image -->
+                                    <div
+                                        class="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                                         @if ($work->images && $work->images->count() > 0)
                                             <img src="{{ Storage::url($work->images->first()->image) }}"
-                                                alt="{{ $work->name }}" class="h-60 object-cover rounded-t-md" />
+                                                alt="{{ $work->name }}"
+                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         @else
-                                            <img src="https://dummyimage.com/600x400/6366f1/ffffff&text={{ urlencode($work->name) }}"
-                                                alt="{{ $work->name }}" class="h-60 object-cover rounded-t-md" />
+                                            <div
+                                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100">
+                                                <div class="text-center p-4">
+                                                    <svg class="w-12 h-12 text-indigo-400 mx-auto mb-3" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="1.5"
+                                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <span
+                                                        class="text-sm font-medium text-indigo-700">{{ $work->type }}</span>
+                                                </div>
+                                            </div>
                                         @endif
 
-                                        <div class="px-6 py-4">
-                                            <!-- Ish turi va narxi -->
-                                            <div class="flex justify-between items-center mb-4">
-                                                <p class="text-sm font-semibold uppercase text-indigo-600">
-                                                    {{ $work->type }}
-                                                </p>
-                                                @if ($work->price)
-                                                    <p class="text-lg font-bold text-gray-900">
-                                                        {{ number_format($work->price, 0, '.', ' ') }} so'm
-                                                    </p>
-                                                @endif
+                                        <!-- Price Overlay -->
+                                        @if ($work->price)
+                                            <div class="absolute bottom-3 left-3">
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1.5 rounded-lg bg-black/80 backdrop-blur-sm text-white text-sm font-bold">
+                                                    {{ number_format($work->price, 0, '.', ' ') }} so'm
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Job Content -->
+                                    <div class="p-5">
+                                        <!-- Job Type -->
+                                        <div class="mb-3">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700">
+                                                {{ $work->type }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Job Title -->
+                                        <h3
+                                            class="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                                            {{ $work->name }}
+                                        </h3>
+
+                                        <!-- Short Description -->
+                                        <p class="text-gray-600 mb-4 text-sm line-clamp-2">
+                                            {{ Str::limit($work->description, 100) }}
+                                        </p>
+
+                                        <!-- Job Details -->
+                                        <div class="space-y-3 mb-4">
+                                            <!-- Location -->
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                </svg>
+                                                <span class="truncate">
+                                                    {{ collect([$work->district, $work->region])->filter()->implode(', ') }}
+                                                </span>
                                             </div>
 
-                                            <!-- Ish nomi -->
-                                            <p class="mb-3 text-xl font-semibold text-gray-900 line-clamp-2">
-                                                {{ $work->name }}
-                                            </p>
+                                            <!-- Date & Time -->
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>
+                                                    {{ $work->when->format('d.m.Y') }} • {{ $work->duration }} kun
+                                                </span>
+                                            </div>
 
-                                            <!-- Tavsif -->
-                                            <p class="mb-4 text-sm text-gray-600 sm:text-base line-clamp-3">
-                                                {{ Str::limit($work->description, 120, '...') }}
-                                            </p>
-
-                                            <!-- Qo'shimcha ma'lumotlar -->
-                                            <div class="mb-4 flex flex-wrap gap-2">
+                                            <!-- Requirements -->
+                                            <div class="flex flex-wrap gap-2">
                                                 @if ($work->how_much_people)
                                                     <span
-                                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                        <svg class="w-4 h-4 mr-1" fill="currentColor"
+                                                        class="inline-flex items-center text-xs px-2 py-1 rounded bg-blue-50 text-blue-700">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor"
                                                             viewBox="0 0 20 20">
                                                             <path
-                                                                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                                                                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                                                         </svg>
                                                         {{ $work->how_much_people }} kishi
                                                     </span>
@@ -98,116 +465,340 @@
 
                                                 @if ($work->gender)
                                                     <span
-                                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                                        {{ $work->gender === 'male' ? '👨 Erkak' : ($work->gender === 'female' ? '👩 Ayol' : '👥 Farqi yo\'q') }}
-                                                    </span>
-                                                @endif
-
-                                                @if ($work->age)
-                                                    <span
-                                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        🎂 {{ $work->age }} yosh
+                                                        class="inline-flex items-center text-xs px-2 py-1 rounded bg-purple-50 text-purple-700">
+                                                        @if ($work->gender === 'male')
+                                                            👨
+                                                        @elseif($work->gender === 'female')
+                                                            👩
+                                                        @else
+                                                            👥
+                                                        @endif
+                                                        {{ $work->gender === 'male' ? 'Erkak' : ($work->gender === 'female' ? 'Ayol' : 'Har qanday') }}
                                                     </span>
                                                 @endif
 
                                                 @if ($work->lunch)
                                                     <span
-                                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                                        🍽️ Tushlik bor
+                                                        class="inline-flex items-center text-xs px-2 py-1 rounded bg-green-50 text-green-700">
+                                                        🍽️ Tushlik
                                                     </span>
                                                 @endif
                                             </div>
+                                        </div>
 
-                                            <!-- Vaqt va davomiylik -->
-                                            @if ($work->when || $work->duration)
-                                                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                                                    <div class="flex flex-col space-y-1 text-sm text-gray-700">
-                                                        @if ($work->when)
-                                                            <div class="flex items-center">
-                                                                <svg class="w-4 h-4 mr-2 text-gray-500"
-                                                                    fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd"
-                                                                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                                        clip-rule="evenodd" />
-                                                                </svg>
-                                                                <span
-                                                                    class="font-medium">{{ $work->when->format('d.m.Y') }}</span>
-                                                            </div>
-                                                        @endif
-                                                        @if ($work->start_time && $work->finish_time)
-                                                            <div class="flex items-center">
-                                                                <svg class="w-4 h-4 mr-2 text-gray-500"
-                                                                    fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd"
-                                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                                                        clip-rule="evenodd" />
-                                                                </svg>
-                                                                <span>{{ $work->start_time }} -
-                                                                    {{ $work->finish_time }}</span>
-                                                            </div>
-                                                        @endif
-                                                        @if ($work->duration)
-                                                            <div class="flex items-center">
-                                                                <svg class="w-4 h-4 mr-2 text-gray-500"
-                                                                    fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd"
-                                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                                                        clip-rule="evenodd" />
-                                                                </svg>
-                                                                <span>{{ $work->duration }} kun</span>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <!-- Manzil -->
-                                            @if ($work->country || $work->district || $work->region || $work->village || $work->address)
-                                                <div class="mb-4 flex items-start text-sm text-gray-600">
-                                                    <svg class="w-4 h-4 mr-2 mt-0.5 text-gray-500" fill="currentColor"
-                                                        viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd"
-                                                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                    <span>
-                                                        {{ collect([$work->address, $work->village, $work->district, $work->region, $work->country])->filter()->implode(', ') }}
-                                                    </span>
-                                                </div>
-                                            @endif
-
-                                            <!-- Muallif ma'lumotlari -->
-                                            <div class="flex items-center pt-4 border-t border-gray-200">
-                                                <img src="{{ $work->user->avatar ? Storage::url($work->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($work->user->name) . '&background=6366f1&color=fff' }}"
+                                        <!-- Footer - Author & Stats -->
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                            <div class="flex items-center">
+                                                <img src="{{ $work->user->avatar ? Storage::url($work->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($work->user->name) . '&background=6366f1&color=fff&size=128' }}"
                                                     alt="{{ $work->user->name }}"
-                                                    class="mr-3 h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" />
-                                                <div class="flex flex-col flex-1">
-                                                    <h6 class="text-sm font-bold text-gray-900">{{ $work->user->name }}
-                                                    </h6>
-                                                    <div
-                                                        class="flex flex-wrap items-center gap-x-2 text-xs text-gray-500">
-                                                        <span>{{ $work->created_at->format('d.m.Y') }}</span>
-                                                        @if ($work->read_count)
-                                                            <span>👁️</span> <span>{{ $work->read_count }}</span>
-                                                        @endif
-                                                    </div>
+                                                    class="w-8 h-8 rounded-full border-2 border-white shadow-sm">
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">
+                                                        {{ $work->user->name }}</p>
+                                                    <p class="text-xs text-gray-500">
+                                                        {{ $work->created_at->diffForHumans() }}</p>
                                                 </div>
                                             </div>
+                                            <div class="flex items-center gap-3 text-sm text-gray-500">
+                                                @if ($work->read_count > 0)
+                                                    <span class="flex items-center">
+                                                        <svg class="w-4 h-4 mr-1" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                        {{ $work->read_count }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </a>
-                                @endforeach
-
-                            </div>
-                            <!-- Button -->
-                            <a href="javascript:void(0);"
-                                class="rounded-md bg-black px-6 py-3 text-center font-semibold text-white">
-                                View More
-                            </a>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
-                    </div>
-                </section>
 
+                        <!-- Pagination -->
+                        @if ($works->hasPages())
+                            <div class="mt-8 border-t border-gray-200 pt-6">
+                                <div class="flex justify-center">
+                                    {{ $works->links() }}
+                                </div>
+                            </div>
+                        @endif
+
+                    </div>
+                @else
+                    <!-- Empty State -->
+                    <div class="text-center py-16">
+                        <div
+                            class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Ishlar topilmadi</h3>
+                        <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                            Kechirasiz, sizning qidiruv mezonlaringizga mos keladigan ishlar hozircha mavjud emas.
+                        </p>
+                        <a href="{{ route('works.index') }}"
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Barcha filtrlarni tozalash
+                        </a>
+                    </div>
+                @endif
             </div>
+
         </div>
     </div>
 </x-app-layout>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .location-select {
+        transition: all 0.2s ease;
+    }
+
+    .location-select:hover {
+        border-color: #9ca3af;
+    }
+
+    .location-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    /* Custom scrollbar for selects */
+    select {
+        scrollbar-width: thin;
+        scrollbar-color: #c7d2fe #f3f4f6;
+    }
+
+    select::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    select::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 3px;
+    }
+
+    select::-webkit-scrollbar-thumb {
+        background-color: #c7d2fe;
+        border-radius: 3px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const regionSelect = document.getElementById('region');
+        const districtSelect = document.getElementById('district');
+        const villageSelect = document.getElementById('village');
+        const searchForm = document.getElementById('searchForm');
+        const sortSelect = document.getElementById('sortSelect');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+
+        // Get current URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentRegion = urlParams.get('region');
+        const currentDistrict = urlParams.get('district');
+        const currentVillage = urlParams.get('village');
+
+        // Initialize region change handler
+        regionSelect.addEventListener('change', function() {
+            updateDistricts(this);
+            submitSearch(); // Auto-submit on region change
+        });
+
+        // District change handler
+        districtSelect.addEventListener('change', function() {
+            updateVillages(this);
+            if (this.value) {
+                submitSearch(); // Auto-submit on district change
+            }
+        });
+
+        // Village change handler
+        villageSelect.addEventListener('change', function() {
+            if (this.value) {
+                submitSearch(); // Auto-submit on village change
+            }
+        });
+
+        // Other filters change handlers
+        document.querySelectorAll(
+            'select[name="type"], select[name="gender"], select[name="lunch"], input[name="min_price"], input[name="max_price"], input[name="how_much_people"], input[name="min_age"], input[name="max_age"]'
+            ).forEach(input => {
+            // For selects, submit on change
+            if (input.tagName === 'SELECT') {
+                input.addEventListener('change', function() {
+                    if (this.value) {
+                        submitSearch();
+                    }
+                });
+            }
+            // For number inputs, submit on blur
+            if (input.tagName === 'INPUT') {
+                input.addEventListener('blur', function() {
+                    if (this.value) {
+                        submitSearch();
+                    }
+                });
+            }
+        });
+
+        // Sort handler
+        if (sortSelect) {
+            sortSelect.value = urlParams.get('sort') || 'newest';
+            sortSelect.addEventListener('change', function() {
+                urlParams.set('sort', this.value);
+                window.location.search = urlParams.toString();
+            });
+        }
+
+        // Reset filters
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', function() {
+                window.location.href = "{{ route('works.index') }}";
+            });
+        }
+
+        // Function to update districts based on selected region
+        function updateDistricts(regionSelect) {
+            const selectedOption = regionSelect.options[regionSelect.selectedIndex];
+            const districtsData = selectedOption.dataset.districts;
+
+            districtSelect.innerHTML = '<option value="">Tumanni tanlang</option>';
+            villageSelect.innerHTML = '<option value="">Avval tumanni tanlang</option>';
+
+            if (!districtsData) return;
+
+            try {
+                const districts = JSON.parse(districtsData);
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.name;
+                    option.textContent = district.name;
+                    option.dataset.villages = JSON.stringify(district.villages);
+                    districtSelect.appendChild(option);
+                });
+
+                // If there's a current district in URL, select it
+                if (currentDistrict && districts.some(d => d.name === currentDistrict)) {
+                    districtSelect.value = currentDistrict;
+                    updateVillages(districtSelect);
+                }
+            } catch (error) {
+                console.error('Error parsing districts:', error);
+            }
+        }
+
+        // Function to update villages based on selected district
+        function updateVillages(districtSelect) {
+            const selectedOption = districtSelect.options[districtSelect.selectedIndex];
+            const villagesData = selectedOption.dataset.villages;
+
+            villageSelect.innerHTML = '<option value="">Qishloqni tanlang</option>';
+
+            if (!villagesData) return;
+
+            try {
+                const villages = JSON.parse(villagesData);
+                villages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+
+                // If there's a current village in URL, select it
+                if (currentVillage && villages.includes(currentVillage)) {
+                    villageSelect.value = currentVillage;
+                }
+            } catch (error) {
+                console.error('Error parsing villages:', error);
+            }
+        }
+
+        // Function to submit search form
+        function submitSearch() {
+            // Remove empty values from form data
+            const formData = new FormData(searchForm);
+            const params = new URLSearchParams();
+
+            for (const [key, value] of formData.entries()) {
+                if (value && value.trim() !== '') {
+                    params.append(key, value);
+                }
+            }
+
+            // Add sort parameter if exists
+            if (sortSelect && sortSelect.value) {
+                params.append('sort', sortSelect.value);
+            }
+
+            // Submit the form via GET request
+            window.location.href = `{{ route('works.index') }}?${params.toString()}`;
+        }
+
+        // Initialize form with current values
+        if (currentRegion) {
+            updateDistricts(regionSelect);
+        }
+
+        // Filter removal functions
+        window.removeFilter = function(filterName) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(filterName);
+            window.location.href = url.toString();
+        };
+
+        window.removePriceFilter = function() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('min_price');
+            url.searchParams.delete('max_price');
+            window.location.href = url.toString();
+        };
+
+        // Debounce function for inputs
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Apply debounce to number inputs
+        const debouncedSubmit = debounce(submitSearch, 1000);
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', debouncedSubmit);
+        });
+    });
+</script>

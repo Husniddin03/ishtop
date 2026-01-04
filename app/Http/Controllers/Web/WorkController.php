@@ -17,10 +17,78 @@ class WorkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $works = Work::all();
-        return view('work.index', compact('works'));
+        $query = Work::query()->with(['user', 'images']);
+
+        // Apply filters
+        if ($request->filled('region')) {
+            $query->where('region', $request->region);
+        }
+
+        if ($request->filled('district')) {
+            $query->where('district', $request->district);
+        }
+
+        if ($request->filled('village')) {
+            $query->where('village', $request->village);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+
+        if ($request->filled('lunch')) {
+            $query->where('lunch', $request->lunch == '1');
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('how_much_people')) {
+            $query->where('how_much_people', $request->how_much_people);
+        }
+
+        if ($request->filled('min_age')) {
+            $query->where('age', '>=', $request->min_age);
+        }
+
+        if ($request->filled('max_age')) {
+            $query->where('age', '<=', $request->max_age);
+        }
+
+        // Apply sorting
+        switch ($request->get('sort', 'newest')) {
+            case 'oldest':
+                $query->orderBy('created_at');
+                break;
+            case 'price_high':
+                $query->orderByDesc('price');
+                break;
+            case 'price_low':
+                $query->orderBy('price');
+                break;
+            case 'most_viewed':
+                $query->orderByDesc('read_count');
+                break;
+            default:
+                $query->orderByDesc('created_at');
+        }
+
+        $works = $query->paginate(12)->withQueryString();
+        $workTypes = Work::all()->groupBy('type');
+        $regions = Region::with('districts.villages')->get();
+
+        return view('work.index', compact('works', 'regions', 'workTypes'));
     }
 
     /**

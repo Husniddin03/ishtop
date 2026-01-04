@@ -53,6 +53,7 @@ return new class extends Migration
             $table->string('region')->nullable();
             $table->string('district')->nullable();
             $table->string('village')->nullable();
+            $table->integer('views_count')->default(0);
             $table->string('address')->nullable();
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();

@@ -14,6 +14,7 @@ use App\Models\Worker;
 use App\Models\Work;
 use App\Models\WorkImage;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $user1 = User::factory()->create([
             'name' => 'Husniddin',
             'email' => 'husniddin13124041@gmail.com',
-            'password' => bcrypt(330440311),
+            'password' => Hash::make('330440311'),
         ]);
 
         // 10 ta oddiy user yaratish

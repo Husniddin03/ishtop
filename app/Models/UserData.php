@@ -27,7 +27,8 @@ class UserData extends Model
         'village',
         'address',
         'latitude',
-        'longitude'
+        'longitude',
+        'views_count'
     ];
 
     public function user()

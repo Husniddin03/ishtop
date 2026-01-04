@@ -18,10 +18,111 @@ class WorkerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $workers = Worker::all();
-        return view('worker.index', compact('workers'));
+        $query = Worker::query()->with(['user.userData', 'user.userContact']);
+
+        // Search by name
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('userData', function ($q2) use ($searchTerm) {
+                        $q2->where('first_name', 'like', "%{$searchTerm}%")
+                            ->orWhere('last_name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
+        // Apply location filters
+        if ($request->filled('region')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('region', $request->region);
+            });
+        }
+
+        if ($request->filled('district')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('district', $request->district);
+            });
+        }
+
+        if ($request->filled('village')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('village', $request->village);
+            });
+        }
+
+        // Apply gender filter
+        if ($request->filled('gender')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('gender', $request->gender);
+            });
+        }
+
+        // Apply age filters
+        if ($request->filled('min_age') || $request->filled('max_age')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                if ($request->filled('min_age')) {
+                    $q->whereRaw('TIMESTAMPDIFF(YEAR, birthday, CURDATE()) >= ?', [$request->min_age]);
+                }
+                if ($request->filled('max_age')) {
+                    $q->whereRaw('TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <= ?', [$request->max_age]);
+                }
+            });
+        }
+
+        // Apply height filters
+        if ($request->filled('min_height')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('height', '>=', $request->min_height);
+            });
+        }
+
+        if ($request->filled('max_height')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('height', '<=', $request->max_height);
+            });
+        }
+
+        // Apply weight filters
+        if ($request->filled('min_weight')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('weight', '>=', $request->min_weight);
+            });
+        }
+
+        if ($request->filled('max_weight')) {
+            $query->whereHas('user.userData', function ($q) use ($request) {
+                $q->where('weight', '<=', $request->max_weight);
+            });
+        }
+
+        // Apply sorting
+        switch ($request->get('sort', 'newest')) {
+            case 'oldest':
+                $query->orderBy('created_at');
+                break;
+            case 'age_young':
+                $query->orderByRaw('(SELECT TIMESTAMPDIFF(YEAR, birthday, CURDATE()) FROM user_data WHERE user_data.user_id = users.id)');
+                break;
+            case 'age_old':
+                $query->orderByRaw('(SELECT TIMESTAMPDIFF(YEAR, birthday, CURDATE()) FROM user_data WHERE user_data.user_id = users.id) DESC');
+                break;
+            case 'name_asc':
+                $query->orderByRaw('(SELECT CONCAT(first_name, " ", last_name) FROM user_data WHERE user_data.user_id = users.id)');
+                break;
+            case 'name_desc':
+                $query->orderByRaw('(SELECT CONCAT(first_name, " ", last_name) FROM user_data WHERE user_data.user_id = users.id) DESC');
+                break;
+            default:
+                $query->orderByDesc('created_at');
+        }
+
+        $workers = $query->paginate(12)->withQueryString();
+        $regions = Region::with('districts.villages')->get();
+
+        return view('worker.index', compact('workers', 'regions'));
     }
 
     /**
@@ -130,6 +231,7 @@ class WorkerController extends Controller
      */
     public function show(string $id)
     {
+        Worker::findOrFail($id)->user->userData()->increment('views_count');
         $worker = Worker::find($id);
         return view('worker.show', compact('worker'));
     }

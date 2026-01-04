@@ -26,6 +26,7 @@ class UserDataFactory extends Factory
             'district' => $this->faker->city(),
             'village' => $this->faker->citySuffix(),
             'address' => $this->faker->address(),
+            'views_count' => random_int(0, 100),
             'latitude' => fake()->optional()->latitude(39, 43),
             'longitude' => fake()->optional()->longitude(56, 73),
             'bio' => $this->faker->paragraph(),
