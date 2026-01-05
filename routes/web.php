@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Web\UserContactController;
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
         'user-wallets' => WalletController::class,
         'user-contacts' => UserContactController::class,
     ]);
+
+    Route::post('auth/avatar/update', [AvatarController::class, 'avatarCreateOrUpdate'])->name('auth.avatar.update');
 });
 
 Route::post('register', [RegisterController::class, 'store'])->name('register.store');
