@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Profile') }}
             </h2>
-            <a href="#" class="btn">Elonlarim</a>
+            <a href="{{ route('profile.myads') }}" class="btn bg-blue-500 rounded text-white px-3 py-1 m-0">Elonlarim</a>
         </div>
     </x-slot>
 

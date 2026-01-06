@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Web\UserContactController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\UserDataController;
@@ -12,22 +11,29 @@ use App\Http\Controllers\Web\WorkerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('work/chat/{id}', [WorkController::class, 'chat'])->name('work.chat');
+    Route::get('work/allchat', [WorkController::class, 'allchat'])->name('work.allchat');
+
     Route::resources([
         'users' => UserController::class,
         'workers' => WorkerController::class,
         'works' => WorkController::class,
-        'user-data' => UserDataController::class,
         'user-wallets' => WalletController::class,
         'user-contacts' => UserContactController::class,
     ]);
+
+    Route::get('profile/myads', [UserDataController::class, 'myads'])->name('profile.myads');
 
     Route::post('auth/avatar/update', [AvatarController::class, 'avatarCreateOrUpdate'])->name('auth.avatar.update');
 });

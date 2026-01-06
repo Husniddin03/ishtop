@@ -225,4 +225,15 @@ class WorkController extends Controller
     {
         //
     }
+
+    public function allchat()
+    {
+        $users = User::all();
+        return view('work.allchat', compact('users'));
+    }
+
+    public function chat($id)
+    {
+        return view('work.chat');
+    }
 }

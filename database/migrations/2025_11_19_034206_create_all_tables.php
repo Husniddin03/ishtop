@@ -64,6 +64,7 @@ return new class extends Migration
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
 
@@ -91,6 +92,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('finish_time');
             $table->integer('duration'); // kunlarda
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
 
@@ -101,6 +103,15 @@ return new class extends Migration
             $table->string('image');
             $table->timestamps();
         });
+        
+        Schema::create('chat', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('work_id')->constrained('works')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->text('message');
+            $table->timestamps();
+        });
+
 
         Schema::create('regions', function (Blueprint $table) {
             $table->id();

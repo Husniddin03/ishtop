@@ -31,7 +31,8 @@ class Work extends Model
         'when',
         'start_time',
         'finish_time',
-        'duration'
+        'duration',
+        'status'
     ];
 
     protected $casts = [
