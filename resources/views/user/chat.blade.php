@@ -44,7 +44,16 @@
                 <div class="md:col-span-3 bg-white shadow rounded-xl flex flex-col h-full">
                     <!-- Chat Header -->
                     <div class="flex items-center justify-between border-b p-4">
-                        <h3 class="font-semibold text-gray-800">Husniddin bilan suhbat</h3>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full">
+                                <img src="{{ $user->avatar ? Storage::url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff&size=128' }}"
+                                    alt="User avatar displayed as a circular image" class="w-full h-full rounded-full">
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">{{ $user->name }}</p>
+                                <p class="text-sm text-gray-500">Online</p>
+                            </div>
+                        </div>
                         <div class="ms-3 relative">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
@@ -53,7 +62,7 @@
 
                                 <x-slot name="content">
 
-                                    <x-dropdown-link href="{{ route('profile.show') }}">
+                                    <x-dropdown-link href="{{ route('users.profile', $user->id) }}">
                                         {{ __('Profilni ko\'rish') }}
                                     </x-dropdown-link>
 
@@ -102,15 +111,19 @@
                 <div class="hidden md:block md:col-span-1 bg-white shadow rounded-xl p-4 overflow-y-auto">
                     <h2 class="text-lg font-semibold mb-4">Foydalanuvchi ma’lumotlari</h2>
                     <div class="flex flex-col items-center text-center">
-                        <img src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full mb-3"
-                            alt="User avatar">
-                        <p class="font-medium text-gray-800">Husniddin</p>
-                        <p class="text-sm text-gray-500">Backend Developer</p>
+                        <div class="w-24 h-24 rounded-full mb-3">
+                            <img src="{{ $user->avatar ? Storage::url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff&size=128' }}"
+                                alt="User avatar displayed as a circular image" class="w-full h-full rounded-full">
+                        </div>
+                        <p class="font-medium text-gray-800">{{ $user->name }}</p>
+                        <p class="text-sm text-gray-500"></p>
                     </div>
                     <div class="mt-6 space-y-2">
-                        <button class="w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg hover:bg-indigo-100">
-                            Profilni ko‘rish
-                        </button>
+                        <a href="{{ route('users.profile', $user->id) }}">
+                            <button class="w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg hover:bg-indigo-100">
+                                Profilni ko‘rish
+                            </button>
+                        </a>
                         <button class="w-full bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100">
                             Chatni o‘chirish
                         </button>

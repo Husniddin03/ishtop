@@ -106,9 +106,18 @@ return new class extends Migration
         
         Schema::create('chat', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_id')->constrained('works')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->text('message');
+            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->text('message')->nullable();
+            $table->string('file')->nullable();
+            $table->string('file_type')->nullable();
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
 

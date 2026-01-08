@@ -87,4 +87,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(Wallet::class);
     }
+
+    // User -> Messages (sent) 
+    public function sentMessages()
+    {
+        return $this->hasMany(Chat::class, 'sender_id');
+    }
+    // User -> Messages (received) 
+    public function receivedMessages()
+    {
+        return $this->hasMany(Chat::class, 'receiver_id');
+    }
+    // Agar to‘g‘ridan-to‘g‘ri message bilan bog‘lamoqchi bo‘lsak 
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

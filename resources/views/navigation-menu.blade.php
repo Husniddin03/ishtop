@@ -74,7 +74,7 @@
                             <x-slot name="content">
                                 <ul class="space-y-3">
                                     <li>
-                                        <a href="{{ route('work.chat', 1) }}"
+                                        <a href="{{ route('chat', 1) }}"
                                             class="flex items-center justify-between p-3 rounded-lg hover:bg-indigo-50 transition">
                                             <div>
                                                 <p class="font-medium text-gray-800">Husniddin</p>
@@ -90,7 +90,7 @@
                         </x-dropdown>
                     </div>
 
-                    <a href="{{ route('work.allchat') }}" class="text-blue-500">
+                    <a href="{{ route('allchat') }}" class="text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -188,12 +188,12 @@
                             <x-slot name="content">
                                 <ul class="space-y-3">
                                     <li>
-                                        <a href="{{ route('work.chat', 1) }}"
+                                        <a href="{{ route('chat', 1) }}"
                                             class="flex items-center justify-between p-3 rounded-lg hover:bg-indigo-50 transition">
                                             <div>
                                                 <p class="font-medium text-gray-800">Husniddin</p>
                                                 <p class="text-sm text-gray-500 truncate">
-                                                    husniddinhusniddinhusniddin23542342@gmail.com
+                                                    husniddin@gmail.com
                                                 </p>
                                             </div>
                                             <span class="text-xs text-gray-400">16:45</span>
@@ -203,7 +203,7 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
-                    <a href="{{ route('work.allchat') }}" class="text-blue-500">
+                    <a href="{{ route('allchat') }}" class="text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"

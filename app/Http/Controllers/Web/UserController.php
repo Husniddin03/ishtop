@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Work;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -61,5 +63,18 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function allchat()
+    {
+        $users = User::all();
+        return view('user.allchat', compact('users'));
+    }
+
+    public function chat(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $work = $request->work_id ? Work::findOrFail($request->work_id) : null;
+        return view('user.chat', compact('user', 'work'));
     }
 }
