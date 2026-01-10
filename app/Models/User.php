@@ -54,10 +54,6 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    protected $casts = [
-        'last_seen_at' => 'datetime',
-    ];
-
     /**
      * Get the attributes that should be cast.
      *
@@ -68,6 +64,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_seen_at' => 'datetime',
         ];
     }
     public function userData()

@@ -85,23 +85,10 @@
 
                     <!-- Status Badge -->
                     <div class="absolute top-6 right-6 z-10">
-                        @php
-                            $statusColor =
-                                $worker->status === 'available'
-                                    ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-100'
-                                    : ($worker->status === 'busy'
-                                        ? 'bg-amber-500/20 border-amber-500/30 text-amber-100'
-                                        : 'bg-gray-500/20 border-gray-500/30 text-gray-100');
-                        @endphp
+
                         <span
-                            class="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md border {{ $statusColor }} text-sm font-bold uppercase tracking-wider">
-                            <span
-                                class="h-2 w-2 rounded-full {{ $worker->status === 'available'
-                                    ? 'bg-emerald-400 animate-pulse'
-                                    : ($worker->status === 'busy'
-                                        ? 'bg-amber-400'
-                                        : 'bg-gray-400') }} mr-2"></span>
-                            {{ $worker->status === 'available' ? 'Bo\'sh' : ($worker->status === 'busy' ? 'Band' : 'Noma\'lum') }}
+                            class="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md border bg-white text-sm font-bold uppercase tracking-wider">
+                            @livewire('is-online-component', ['id' => $worker->user->id])
                         </span>
                     </div>
 
@@ -126,23 +113,6 @@
                                             </div>
                                         @endif
                                     </div>
-
-                                    <!-- Online Status -->
-                                    <div
-                                        class="absolute bottom-4 right-4 w-6 h-6 bg-emerald-500 border-4 border-white rounded-full shadow-lg">
-                                    </div>
-
-                                    <!-- Verification Badge -->
-                                    @if ($worker->is_verified)
-                                        <div
-                                            class="absolute -top-2 -right-2 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
-                                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
 

@@ -38,7 +38,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        dd($id);
+        $user = User::findOrFail($id);
+        $worker = $user->worker;
+        return view('user.show', compact('user', 'worker'));
     }
 
     /**

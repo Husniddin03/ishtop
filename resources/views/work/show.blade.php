@@ -367,13 +367,12 @@
                                 <img src="{{ $work->user->avatar ? Storage::url($work->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($work->user->name) . '&background=6366f1&color=fff&size=128' }}"
                                     alt="{{ $work->user->name }}"
                                     class="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg">
-                                <div
-                                    class="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 border-white rounded-full">
-                                </div>
                             </div>
                             <div class="ml-4">
                                 <h4 class="text-lg font-bold text-gray-900">{{ $work->user->name }}</h4>
-                                <p class="text-sm text-gray-500">{{ $work->user->email }}</p>
+                                <p class="text-sm text-gray-500">
+                                    @livewire('is-online-component', ['id' => $work->user->id])
+                                </p>
                             </div>
                         </div>
 

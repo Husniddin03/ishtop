@@ -17,9 +17,9 @@
                         <p class="font-medium text-gray-800">{{ $user->name }}</p>
                         <p class="text-xs text-gray-500">
                             @if ($user->is_online)
-                                <span class="text-green-600">Hozir onlayn</span>
+                                <span class="text-green-600">Onlayn</span>
                             @else
-                                {{ $user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'oflayn' }}
+                                {{ $user->last_seen_at ? $user->last_seen_at->locale('uz_Latn')->diffForHumans() : 'Noma\'lum' }}
                             @endif
                         </p>
                     </div>

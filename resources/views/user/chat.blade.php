@@ -51,10 +51,97 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- All Chat Container -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 h-full">
+                <!-- Chat Window -->
+                <div class="md:col-span-3 bg-white shadow rounded-xl flex flex-col h-[85vh]">
+                    <!-- Chat Header -->
+                    <div class="flex items-center justify-between border-b p-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full">
+                                <img src="{{ $user->avatar ? Storage::url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff&size=128' }}"
+                                    alt="User avatar displayed as a circular image" class="w-full h-full rounded-full">
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">{{ $user->name }}</p>
+                                <p class="text-sm text-gray-500">
+                                    @livewire('is-online-component', ['id' => $user->id])
+                                </p>
+                            </div>
+                        </div>
+                        <div class="ms-3 relative">
+                            <x-dropdown align="right" width="48">
+                                <x-slot name="trigger">
+                                    <button class="text-gray-500 hover:text-indigo-600">⋮</button>
+                                </x-slot>
+
+                                <x-slot name="content">
+
+                                    <x-dropdown-link href="{{ route('users.show', $user->id) }}">
+                                        {{ __('Profilni ko\'rish') }}
+                                    </x-dropdown-link>
+
+                                    <div class="border-t border-gray-200"></div>
+
+                                    <!-- Authentication -->
+                                    <form method="POST" action="{{ route('chat.destroy', ['id' => $user->id]) }}"
+                                        x-data
+                                        onsubmit="return confirm('Chindan ham ushbu chatni o‘chirmoqchimisiz?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-dropdown-link href="#" @click.prevent="$root.submit();">
+                                            {{ __('Chatni o\'chirish') }}
+                                        </x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    </div>
 
 
-                @livewire('chat-messages', ['id' => $user->id])
+                    @livewire('chat-messages', ['id' => $user->id])
 
+                    <form id="chat-form" action="{{ route('chat.send', ['id' => $user->id]) }}" method="POST"
+                        class="border-t p-4 flex items-center gap-3">
+                        @csrf
+                        <input type="text" placeholder="Xabar yozing..." name="message" autofocus
+                            class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        <button type="submit" class="bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <script>
+                        document.getElementById('chat-form').addEventListener('submit', async function(e) {
+                            e.preventDefault(); // sahifa yangilanishini to‘xtatadi
+
+                            const form = e.target;
+                            const formData = new FormData(form);
+
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': formData.get('_token')
+                                }
+                            });
+
+                            if (response.ok) {
+                                // inputni tozalash
+                                form.message.value = '';
+                                // scrollni pastga tushirish
+                                const container = document.getElementById('chat-container');
+                                container.scrollTo({
+                                    top: container.scrollHeight,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    </script>
+
+                </div>
 
                 <!-- User Info / Sidebar (faqat desktopda ko‘rinadi) -->
                 <div class="hidden md:block md:col-span-1 bg-white shadow rounded-xl p-4 overflow-y-auto">
@@ -68,14 +155,19 @@
                         <p class="text-sm text-gray-500"></p>
                     </div>
                     <div class="mt-6 space-y-2">
-                        <a href="{{ route('users.profile', $user->id) }}">
+                        <a href="{{ route('users.show', $user->id) }}">
                             <button class="w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg hover:bg-indigo-100">
                                 Profilni ko‘rish
                             </button>
                         </a>
-                        <button class="w-full bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100">
-                            Chatni o‘chirish
-                        </button>
+                        <form action="{{ route('chat.destroy', $user->id) }}" method="POST"
+                            onsubmit="return confirm('Chindan ham ushbu chatni o‘chirmoqchimisiz?');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="w-full bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100">
+                                Chatni o‘chirish
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -84,3 +176,24 @@
     </div>
 
 </x-app-layout>
+
+
+
+<style>
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #4caf50;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+        opacity: 1;
+    }
+</style>

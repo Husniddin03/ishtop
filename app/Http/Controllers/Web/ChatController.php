@@ -79,4 +79,39 @@ class ChatController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $message = Message::findOrFail($id);
+
+        // Ensure that only the sender can update the message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $message->message = $request->input('message');
+        $message->save();
+
+        return response()->json(['status' => 'success']);
+        
+    }
+
+    public function destroy($id)
+    {
+        $chat = Message::where(function ($query) use ($id) {
+            $query->where('sender_id', Auth::id())
+                ->where('receiver_id', $id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', $id)
+                ->where('receiver_id', Auth::id());
+        })->get();
+        foreach ($chat as $message) {
+            $message->delete();
+        }
+        return redirect()->route('allchat');
+    }
 }

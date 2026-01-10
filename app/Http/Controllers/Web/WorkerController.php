@@ -194,6 +194,10 @@ class WorkerController extends Controller
             ]
         );
 
+        $user->update([
+            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+        ]);
+
         // Rasmlarni saqlash
         if ($request->hasFile('avatar')) {
             // Eski rasmni o'chirish
@@ -222,7 +226,7 @@ class WorkerController extends Controller
         );
 
         return redirect()
-            ->route('workers.show', $worker->id)
+            ->route('workers.show', $user->worker->id)
             ->with('success', 'Ishchi muvaffaqiyatli yaratildi!');
     }
 

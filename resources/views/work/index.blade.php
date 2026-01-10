@@ -449,6 +449,20 @@
                                                 </span>
                                             </div>
 
+                                            {{-- create work date --}}
+
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>
+                                                    {{ $work->created_at->diffForHumans() }}
+                                                </span>
+                                            </div>
+
                                             <!-- Requirements -->
                                             <div class="flex flex-wrap gap-2">
                                                 @if ($work->how_much_people)
@@ -495,8 +509,7 @@
                                                 <div class="ml-3">
                                                     <p class="text-sm font-medium text-gray-900">
                                                         {{ $work->user->name }}</p>
-                                                    <p class="text-xs text-gray-500">
-                                                        {{ $work->created_at->diffForHumans() }}</p>
+                                                    @livewire('is-online-component', ['id' => $work->user->id])
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-3 text-sm text-gray-500">
@@ -650,7 +663,7 @@
         // Other filters change handlers
         document.querySelectorAll(
             'select[name="type"], select[name="gender"], select[name="lunch"], input[name="min_price"], input[name="max_price"], input[name="how_much_people"], input[name="min_age"], input[name="max_age"]'
-            ).forEach(input => {
+        ).forEach(input => {
             // For selects, submit on change
             if (input.tagName === 'SELECT') {
                 input.addEventListener('change', function() {

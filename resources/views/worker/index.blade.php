@@ -371,22 +371,8 @@
 
                                     <!-- Status Badge -->
                                     <div class="absolute top-3 left-3 z-10">
-                                        @php
-                                            $statusColor =
-                                                $worker->status === 'available'
-                                                    ? 'bg-emerald-500 text-white'
-                                                    : ($worker->status === 'busy'
-                                                        ? 'bg-amber-500 text-white'
-                                                        : 'bg-gray-500 text-white');
-                                            $statusText =
-                                                $worker->status === 'available'
-                                                    ? 'Bo\'sh'
-                                                    : ($worker->status === 'busy'
-                                                        ? 'Band'
-                                                        : 'Noma\'lum');
-                                        @endphp
                                         <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColor }}">
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white">
                                             @if ($worker->status === 'available')
                                                 <svg class="w-3 h-3 mr-1 animate-pulse" fill="currentColor"
                                                     viewBox="0 0 20 20">
@@ -395,7 +381,7 @@
                                                         clip-rule="evenodd" />
                                                 </svg>
                                             @endif
-                                            {{ $statusText }}
+                                            @livewire('is-online-component', ['id' => $worker->user->id])
                                         </span>
                                     </div>
 

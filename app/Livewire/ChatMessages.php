@@ -25,9 +25,6 @@ class ChatMessages extends Component
 
         $user = User::findOrFail($this->userId);
 
-        // Foydalanuvchi onlaynligini tekshirish (masalan, oxirgi 1 daqiqa ichida faol bo'lgan bo'lsa)
-        $isOnline = $user->last_seen_at && $user->last_seen_at->diffInSeconds(now()) < 10;
-
         $messages = Message::where(function ($query) {
             $query->where('sender_id', Auth::id())
                 ->where('receiver_id', $this->userId);
@@ -47,7 +44,6 @@ class ChatMessages extends Component
         return view('livewire.chat-messages', [
             'user' => $user,
             'messages' => $messages,
-            'isOnline' => $isOnline,
         ]);
     }
 }
