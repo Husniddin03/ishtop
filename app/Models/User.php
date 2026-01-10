@@ -29,7 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'last_seen_at'
     ];
 
     /**
@@ -51,6 +52,10 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+    ];
+
+    protected $casts = [
+        'last_seen_at' => 'datetime',
     ];
 
     /**
@@ -91,16 +96,11 @@ class User extends Authenticatable
     // User -> Messages (sent) 
     public function sentMessages()
     {
-        return $this->hasMany(Chat::class, 'sender_id');
+        return $this->hasMany(Message::class, 'sender_id');
     }
     // User -> Messages (received) 
     public function receivedMessages()
     {
-        return $this->hasMany(Chat::class, 'receiver_id');
-    }
-    // Agar to‘g‘ridan-to‘g‘ri message bilan bog‘lamoqchi bo‘lsak 
-    public function messages()
-    {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

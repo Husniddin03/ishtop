@@ -25,14 +25,12 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
-                                <a href="{{ route('allchat') }}"
-                                    class="ms-1 text-sm font-medium text-gray-500 hover:text-indigo-600">Chatlar</a>
+                                <p class="ms-1 text-sm font-medium text-gray-500 hover:text-indigo-600">Chatlar</p>
                             </div>
                         </li>
                     </ol>
                 </nav>
             </div>
-
         </div>
     </x-slot>
     <div class="py-8">
@@ -42,25 +40,7 @@
                 <!-- Chat List (faqat desktopda ko‘rinadi) -->
                 <div class="md:block md:col-span-1 bg-white shadow rounded-xl p-4 overflow-y-auto">
                     <h2 class="text-lg font-semibold mb-4">Barcha Chatlar</h2>
-                    <ul class="space-y-3">
-                        @foreach ($users as $user)
-                            <li>
-                                <a href="{{ route('chat', $user->id) }}"
-                                    class="flex items-center justify-between p-3 rounded-lg hover:bg-indigo-50 transition">
-                                    <div class="flex items-center content-center gap-4">
-                                        <div class="w-12 h-12 rounded-full mb-3">
-                                            <img src="{{ $user->avatar? Storage::url($user->avatar): 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff&size=128' }}" alt="User avatar displayed as a circular image" class="w-full h-full rounded-full">
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800">{{ $user->name }}</p>
-                                            <p class="text-sm text-gray-500 truncate">{{ $user->email }}</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-xs text-gray-400">16:45</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                    @livewire('all-chat-component')
                 </div>
             </div>
 

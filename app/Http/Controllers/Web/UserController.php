@@ -64,17 +64,4 @@ class UserController extends Controller
     {
         //
     }
-
-    public function allchat()
-    {
-        $users = User::all();
-        return view('user.allchat', compact('users'));
-    }
-
-    public function chat(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $work = $request->work_id ? Work::findOrFail($request->work_id) : null;
-        return view('user.chat', compact('user', 'work'));
-    }
 }

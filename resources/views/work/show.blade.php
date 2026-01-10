@@ -444,7 +444,7 @@
                             @endif
 
                             <!-- Send Message Button -->
-                            <a href="{{ route('works.chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}">
+                            <a href="{{ route('chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}">
                                 <button
                                     class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg mt-4">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

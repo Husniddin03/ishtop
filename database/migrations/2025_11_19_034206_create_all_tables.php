@@ -103,17 +103,11 @@ return new class extends Migration
             $table->string('image');
             $table->timestamps();
         });
-        
-        Schema::create('chat', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
-            $table->timestamps();
-        });
 
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
             $table->text('message')->nullable();
             $table->string('file')->nullable();
             $table->string('file_type')->nullable();
@@ -164,5 +158,6 @@ return new class extends Migration
         Schema::dropIfExists('regions');
         Schema::dropIfExists('districts');
         Schema::dropIfExists('villages');
+        Schema::dropIfExists('messages');
     }
 };

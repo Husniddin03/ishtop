@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Web\ChatController;
 use App\Http\Controllers\Web\UserContactController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\UserDataController;
@@ -20,8 +21,12 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('chat/{id}', [UserController::class, 'chat'])->name('chat');
-    Route::get('allchat', [UserController::class, 'allchat'])->name('allchat');
+    
+
+    Route::get('chat/{id}', [ChatController::class, 'chat'])->name('chat');
+    Route::get('allchat', [ChatController::class, 'allchat'])->name('allchat');
+    Route::post('chat/send/{id}', [ChatController::class, 'send'])->name('chat.send');
+    Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead'])->name('chat.mark-as-read');
 
     Route::resources([
         'users' => UserController::class,
