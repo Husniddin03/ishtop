@@ -205,17 +205,110 @@ class WorkController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Work $work)
     {
-        //
+        $regions = Region::all();
+        return view('work.edit', compact('work', 'regions'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Work $work)
     {
-        //
+        $user = Auth::user();
+        if (!$user instanceof User) {
+            throw new \Exception('Authenticated user is not an instance of the User model.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'type' => 'sometimes|required|string|max:100',
+            'price' => 'sometimes|required|numeric|min:0',
+            'how_much_people' => 'sometimes|required|integer|min:1',
+            'gender' => 'sometimes|nullable|in:male,female,any',
+            'age' => 'sometimes|nullable|integer|min:0',
+            'description' => 'sometimes|nullable|string',
+            'lunch' => 'sometimes|nullable|boolean',
+            'country' => 'sometimes|required|string',
+            'region' => 'sometimes|required',
+            'district' => 'sometimes|required',
+            'village' => 'sometimes|required',
+            'address' => 'sometimes|nullable|string|max:500',
+            'when' => 'sometimes|required|date',
+            'start_time' => 'sometimes|required',
+            'finish_time' => 'sometimes|required',
+            'duration' => 'sometimes|required|integer|min:1|max:30',
+            'images.*' => 'sometimes|nullable|image|max:10240', // 10MB
+        ]);
+
+        $validated1 = $request->validate([
+            'phone' => 'sometimes|required|string|max:20',
+            'telegram' => 'sometimes|nullable|string|max:255',
+            'facebook' => 'sometimes|nullable|string|max:255',
+            'instagram' => 'sometimes|nullable|string|max:255',
+        ]);
+
+        // Ishni yaratish
+        $work->update([
+            'user_id' => Auth::id(),
+            'name' => $validated['name'],
+            'type' => $validated['type'],
+            'price' => $validated['price'],
+            'how_much_people' => $validated['how_much_people'],
+            'gender' => $validated['gender'] ?? null,
+            'age' => $validated['age'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'lunch' => $request->has('lunch'),
+            'country' => $validated['country'],
+            'region' => is_numeric($validated['region']) ? Region::where('id', $validated['region'])->first()->name_uz : $validated['region'],
+            'district' => is_numeric($validated['district']) ? District::where('id', $validated['district'])->first()->name_uz : $validated['district'],
+            'village' => is_numeric($validated['village']) ? Village::where('id', $validated['village'])->first()->name_uz : $validated['village'],
+            'address' => $validated['address'] ?? null,
+            'when' => $validated['when'],
+            'start_time' => $validated['start_time'],
+            'finish_time' => $validated['finish_time'],
+            'duration' => $validated['duration'],
+        ]);
+
+        $user->userContact()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'phone' => $validated1['phone'],
+                'telegram' => $validated1['telegram'],
+                'facebook' => $validated1['facebook'],
+                'instagram' => $validated1['instagram'],
+            ]
+        );
+
+        // Rasmlarni saqlash
+        if ($request->hasFile('images')) {
+            $images = WorkImage::where('work_id', $work->id)->get();
+
+            foreach ($images as $img) {
+                if (file_exists(storage_path('app/public/' . $img->image))) {
+                    unlink(storage_path('app/public/' . $img->image));
+                }
+            }
+            WorkImage::where('work_id', $work->id)->delete();
+            foreach ($request->file('images') as $image) {
+                if ($image->isValid()) {
+                    $path = $image->store('work_images', 'public');
+
+                    WorkImage::create([
+                        'work_id' => $work->id,
+                        'image' => $path,
+                    ]);
+                }
+            }
+        }
+
+        // Save the work model to ensure all data is persisted
+        $work->save();
+
+        return redirect()
+            ->route('works.show', $work->id)
+            ->with('success', 'Ish muvaffaqiyatli yangilandi!');
     }
 
     /**
@@ -223,6 +316,24 @@ class WorkController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $work = Work::findOrFail($id);
+
+        // Delete associated images from storage
+        $images = WorkImage::where('work_id', $work->id)->get();
+        foreach ($images as $img) {
+            if (file_exists(storage_path('app/public/' . $img->image))) {
+                unlink(storage_path('app/public/' . $img->image));
+            }
+        }
+
+        // Delete image records from database
+        WorkImage::where('work_id', $work->id)->delete();
+
+        // Delete the work
+        $work->delete();
+
+        return redirect()
+            ->route('works.index')
+            ->with('success', 'Ish muvaffaqiyatli o\'chirildi!');
     }
 }

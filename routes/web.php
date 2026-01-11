@@ -26,8 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::get('chat/{id}', [ChatController::class, 'chat'])->name('chat');
     Route::get('allchat', [ChatController::class, 'allchat'])->name('allchat');
     Route::post('chat/send/{id}', [ChatController::class, 'send'])->name('chat.send');
-    Route::put('chat/update/{id}', [ChatController::class, 'update'])->name('chat.update');
+    Route::post('chat/update/{id}', [ChatController::class, 'update'])->name('chat.update');
     Route::delete('chat/destroy/{id}', [ChatController::class, 'destroy'])->name('chat.destroy');
+    Route::delete('chat/message/destroy/{id}', [ChatController::class, 'messageDestroy'])->name('chat.message.destroy');
     Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead'])->name('chat.mark-as-read');
 
     Route::resources([

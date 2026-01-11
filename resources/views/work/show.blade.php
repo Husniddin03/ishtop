@@ -442,17 +442,20 @@
                                 </div>
                             @endif
 
-                            <!-- Send Message Button -->
-                            <a href="{{ route('chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}">
-                                <button
-                                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg mt-4">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                    </svg>
-                                    Xabar yuborish
-                                </button>
-                            </a>
+                            @if (auth()->user()->id !== $work->user->id)
+                                <!-- Send Message Button -->
+                                <a href="{{ route('chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}">
+                                    <button
+                                        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg mt-4">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                        </svg>
+                                        Xabar yuborish
+                                    </button>
+                                </a>
+                            @endif
                         </div>
                     </div>
 
@@ -555,19 +558,24 @@
                         </div>
                     </div>
 
-                    <!-- Apply Button -->
-                    <button
-                        class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                        Ishga ariza berish
-                    </button>
-                    <button
-                        class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                        Tahrirlash
-                    </button>
-                    <button
-                        class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                        O'chirish
-                    </button>
+                    @if (auth()->user()->id == $work->user->id)
+                        <!-- Apply Button -->
+                        <a href="{{ route('works.edit', $work->id) }}">
+                            <button
+                                class="w-full py-4 mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                Tahrirlash
+                            </button>
+                        </a>
+                        <form action="{{ route('works.destroy', $work->id) }}" method="POST"
+                            onsubmit="return confirm('Ishonchingiz komilmi? Bu amalni qaytarib bo\'lmaydi!');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="w-full py-4 bg-red-600 text-white font-bold text-lg rounded-2xl hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                O'chirish
+                            </button>
+                        </form>
+                    @endif
 
                 </div>
             </div>

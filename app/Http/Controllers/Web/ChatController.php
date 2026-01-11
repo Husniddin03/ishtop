@@ -26,6 +26,9 @@ class ChatController extends Controller
 
     public function chat($id)
     {
+        if (Auth::id() == $id) {
+            return redirect()->route('allchat');
+        }
         $user = User::findOrFail($id);
         $messages = Message::where(function ($query) use ($id) {
             $query->where('sender_id', Auth::id())
@@ -34,9 +37,6 @@ class ChatController extends Controller
             $query->where('sender_id', $id)
                 ->where('receiver_id', Auth::id());
         })->orderBy('created_at', 'asc')->get();
-
-        // all do ready
-
 
         return view('user.chat', compact('user', 'messages'));
     }
@@ -93,11 +93,11 @@ class ChatController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
         }
 
-        $message->message = $request->input('message');
-        $message->save();
+        $message->update([
+            'message' => $request->input('message'),
+        ]);
 
         return response()->json(['status' => 'success']);
-        
     }
 
     public function destroy($id)
@@ -113,5 +113,19 @@ class ChatController extends Controller
             $message->delete();
         }
         return redirect()->route('allchat');
+    }
+
+    public function messageDestroy($id)
+    {
+        $message = Message::findOrFail($id);
+
+        // Ensure that only the sender can delete the message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $message->delete();
+
+        return response()->json(['status' => 'success']);
     }
 }

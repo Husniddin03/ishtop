@@ -94,34 +94,21 @@
 
                     <!-- Status Badge -->
                     <div class="absolute top-6 right-6 z-10">
-                        @php
-                            $statusColor =
-                                $user->last_seen_at === 'available'
-                                    ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-100'
-                                    : ($user->last_seen_at === 'busy'
-                                        ? 'bg-amber-500/20 border-amber-500/30 text-amber-100'
-                                        : 'bg-gray-500/20 border-gray-500/30 text-gray-100');
-                        @endphp
+                        
                         <span
-                            class="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md border {{ $statusColor }} text-sm font-bold uppercase tracking-wider">
-                            <span
-                                class="h-2 w-2 rounded-full {{ $user->last_seen_at === 'available'
-                                    ? 'bg-emerald-400 animate-pulse'
-                                    : ($user->last_seen_at === 'busy'
-                                        ? 'bg-amber-400'
-                                        : 'bg-gray-400') }} mr-2"></span>
-                            {{ $user->last_seen_at === 'available' ? 'Bo\'sh' : ($user->last_seen_at === 'busy' ? 'Band' : 'Noma\'lum') }}
+                            class="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md border bg-white text-sm font-bold uppercase tracking-wider">
+                            {{ $user->last_seen_at->diffForHumans() }}
                         </span>
                     </div>
 
-                    <div class="relative px-6 md:px-10 pb-10 pt-24">
+                    <div class="relative px-10 pb-10 md:pt-24">
                         <!-- Profile Content -->
                         <div class="flex flex-col md:flex-row items-center md:items-end gap-8">
                             <!-- Avatar -->
-                            <div class="relative -mt-20 md:-mt-32">
+                            <div class="relative mt-20 md:-mt-32">
                                 <div class="relative">
                                     <div
-                                        class="h-52 w-52 md:h-64 md:w-64 rounded-[2.5rem] border-8 border-white/90 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                                        class="h-52 w-52 md:h-64 md:mt-16 md:w-64 rounded-[2.5rem] border-8 border-white/90 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                                         @if ($user->avatar)
                                             <img class="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                                                 src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}">
@@ -139,13 +126,13 @@
                                         @endif
                                     </div>
 
-                                    <!-- Online Status -->
+                                    {{-- <!-- Online Status -->
                                     <div
                                         class="absolute bottom-4 right-4 w-6 h-6 bg-emerald-500 border-4 border-white rounded-full shadow-lg">
                                     </div>
 
                                     <!-- Verification Badge -->
-                                    @if ($user->last_seen_at)
+                                    @if (Livewire::mount('is-online-component', ['id' => $user->id])->html() == 'Online')
                                         <div
                                             class="absolute -top-2 -right-2 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
                                             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -154,7 +141,7 @@
                                                     clip-rule="evenodd" />
                                             </svg>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
 

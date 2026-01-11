@@ -113,6 +113,44 @@
                         </button>
                     </form>
 
+                    <form id="chat-form-update" class="hidden">
+                        @csrf
+                        <div class="flex w-full items-center justify-between border-b p-4">
+                            <a href="#" class="text-indigo-600 text-sm flex items-center gap-2"
+                                id="redirect-message">
+                                <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                </svg>
+                                <p>
+                                    Xabarni tahrirlash
+                                </p>
+                            </a>
+                            <button type="button"
+                                onclick="document.getElementById('chat-form-update').classList.add('hidden'); document.getElementById('chat-form').classList.remove('hidden');"
+                                class="text-gray-500 hover:text-indigo-600 me-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="border-t p-4 flex items-center gap-3">
+                            <input type="text" placeholder="Xabar yozing..." name="message" autofocus
+                                id="update-input"
+                                class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <button type="submit"
+                                class="bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+
                     <script>
                         document.getElementById('chat-form').addEventListener('submit', async function(e) {
                             e.preventDefault(); // sahifa yangilanishini to‘xtatadi
@@ -135,6 +173,96 @@
                                 const container = document.getElementById('chat-container');
                                 container.scrollTo({
                                     top: container.scrollHeight,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    </script>
+
+                    <script>
+                        function updateMessage(id, message) {
+                            const chatForm = document.getElementById('chat-form');
+                            const chatFormUpdate = document.getElementById('chat-form-update');
+                            const updateInput = document.getElementById('update-input');
+
+                            const redirectMessage = document.getElementById('redirect-message');
+
+                            redirectMessage.addEventListener('click', function(e) {
+                                e.preventDefault(); // default anchor harakatini to‘xtatamiz
+
+                                document.querySelectorAll('.highlight').forEach(el => {
+                                    el.classList.remove('highlight');
+                                });
+
+                                const messageElement = document.getElementById(`message_${id}`);
+                                if (messageElement) {
+                                    // Smooth scroll
+                                    messageElement.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'center'
+                                    });
+
+                                    // Highlight class qo‘shamiz
+                                    messageElement.classList.add('highlight');
+
+                                    // Animatsiya tugagach classni olib tashlaymiz
+                                    setTimeout(() => {
+                                        messageElement.classList.remove('highlight');
+                                    }, 1000);
+                                }
+                            });
+
+
+                            const messageElement = document.getElementById(`message_${id}`);
+                            const messagePosition = messageElement.offsetTop;
+
+                            redirectMessage.href = `#message_${id}`;
+
+                            // Tahrirlash formasini ko‘rsatish
+                            chatForm.classList.add('hidden');
+                            chatFormUpdate.classList.remove('hidden');
+
+                            // Tahrirlash maydoniga eski xabar matnini o‘rnatish
+                            updateInput.value = message;
+
+                            // Formaning action atributini yangilash
+                            chatFormUpdate.action = `/chat/update/${id}`;
+                            chatFormUpdate.message.focus();
+
+
+                        }
+                    </script>
+
+                    <script>
+                        document.getElementById('chat-form-update').addEventListener('submit', async function(e) {
+                            e.preventDefault(); // sahifa yangilanishini to‘xtatadi
+
+                            const form = e.target;
+                            const formData = new FormData(form);
+
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': formData.get('_token')
+                                }
+                            });
+
+                            if (response.ok) {
+                                const chatForm = document.getElementById('chat-form');
+                                const chatFormUpdate = document.getElementById('chat-form-update');
+                                // tahrirlash formasini yashirish va asosiy formani ko‘rsatish
+                                form.classList.add('hidden');
+                                chatForm.classList.remove('hidden');
+                                const messageElement = document.getElementById(`message_${id}`);
+
+                                // inputni tozalash
+                                form.querySelector('[name="message"]').value = '';
+
+                                // scrollni pastga tushirish
+                                const container = document.getElementById('chat-container');
+                                container.scrollTo({
+                                    top: messageElement.offsetTop,
                                     behavior: 'smooth'
                                 });
                             }
@@ -195,5 +323,24 @@
 
     .toast.show {
         opacity: 1;
+    }
+
+    .highlight {
+        animation: flash 1s ease;
+    }
+
+    @keyframes flash {
+        0% {
+            background-color: #fef08a;
+        }
+
+        /* sariq */
+        50% {
+            background-color: #fde047;
+        }
+
+        100% {
+            background-color: transparent;
+        }
     }
 </style>

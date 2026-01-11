@@ -92,14 +92,14 @@
                         </span>
                     </div>
 
-                    <div class="relative px-6 md:px-10 pb-10 pt-24">
+                    <div class="relative px-6 md:px-10 pb-10 md:pt-24">
                         <!-- Profile Content -->
                         <div class="flex flex-col md:flex-row items-center md:items-end gap-8">
                             <!-- Avatar -->
-                            <div class="relative -mt-20 md:-mt-32">
+                            <div class="relative mt-20 md:-mt-32">
                                 <div class="relative">
                                     <div
-                                        class="h-52 w-52 md:h-64 md:w-64 rounded-[2.5rem] border-8 border-white/90 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                                        class="h-52 w-52 md:mt-16 mt-0 md:h-64 md:w-64 rounded-[2.5rem] border-8 border-white/90 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                                         @if ($worker->user->avatar)
                                             <img class="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                                                 src="{{ Storage::url($worker->user->avatar) }}"
