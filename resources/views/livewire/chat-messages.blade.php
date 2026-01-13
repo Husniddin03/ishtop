@@ -41,6 +41,42 @@
         @if ($message->sender_id === auth()->id())
             <div class="flex justify-end flex-col items-end">
 
+                @if (strpos($message->redirect, 'work_') !== false)
+                    @php
+                        $id = explode('_', $message->redirect)[1];
+                    @endphp
+                    <div>
+                        <a href="{{ route('works.show', $id) }}"
+                            class="text-indigo-600 text-sm flex items-center gap-2 mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                            </svg>
+
+                            <p>Ishni ko'rish</p>
+                        </a>
+                    </div>
+                @elseif (strpos($message->redirect, 'message_') !== false)
+                    @php
+                        $redirectId = explode('_', $message->redirect)[1];
+                        $redirectMessage = \App\Models\Message::find($redirectId);
+                    @endphp
+                    @if ($redirectMessage)
+                        <div onclick="redirectMessage('message_{{ $redirectId }}')">
+                            <a id="go-message" href="#"
+                                class="text-indigo-600 text-sm flex items-center gap-2 mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
+                                </svg>
+                                <p>{{ substr($redirectMessage->message, 0, 20) }}...</p>
+                            </a>
+                        </div>
+                    @endif
+                @endif
+
                 <div class="relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -53,6 +89,11 @@
                         </x-slot>
 
                         <x-slot name="content">
+
+                            <x-dropdown-button data-message="{{ $message->message }}"
+                                onclick="redirectMessage('{{ $message->id }}', this.dataset.message)">
+                                {{ __('Javob berish') }}
+                            </x-dropdown-button>
 
                             <x-dropdown-button data-message="{{ $message->message }}"
                                 onclick="updateMessage('{{ $message->id }}', this.dataset.message)">
@@ -94,13 +135,31 @@
                     </p>
                     <p class="text-sm">{{ $message->created_at->format('H:i A') }}</p>
                 </div>
-                @if ($message->created_at != $message->updated_at)
+                @if ($message->edited_date)
                     <p class="text-xs text-gray-400 italic mt-1">Tahrirlangan:
-                        {{ $message->updated_at->locale('uz_Latn')->translatedFormat('j F Y H:i A') }}</p>
+                        {{ \Carbon\Carbon::parse($message->edited_date)->locale('uz_Latn')->translatedFormat('j F Y H:i A') }}
+                    </p>
                 @endif
             </div>
         @else
             <div class="flex justify-start flex-col items-start">
+                @if (strpos($message->redirect, 'work_') !== false)
+                    @php
+                        $id = explode('_', $message->redirect)[1];
+                    @endphp
+                    <div>
+                        <a href="{{ route('works.show', $id) }}"
+                            class="text-indigo-600 text-sm flex items-center gap-2 mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                            </svg>
+
+                            <p>Ishni ko'rish</p>
+                        </a>
+                    </div>
+                @endif
                 <div class="relative">
                     <x-dropdown align="left" width="48">
                         <x-slot name="trigger">
@@ -139,9 +198,10 @@
                 <div class="flex items-center gap-2">
                     <p class="text-sm">{{ $message->created_at->format('H:i') }}</p>
                 </div>
-                @if ($message->created_at != $message->updated_at)
+                @if ($message->edited_date)
                     <p class="text-xs text-gray-400 italic mt-1">Tahrirlangan:
-                        {{ $message->updated_at->locale('uz_Latn')->translatedFormat('j F Y H:i A') }}</p>
+                        {{ \Carbon\Carbon::parse($message->edited_date)->locale('uz_Latn')->translatedFormat('j F Y H:i A') }}
+                    </p>
                 @endif
             </div>
         @endif

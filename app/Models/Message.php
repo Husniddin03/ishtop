@@ -11,11 +11,13 @@ class Message extends Model
 
     protected $fillable = [
         'sender_id',
+        'redirect',
         'receiver_id',
         'message',
         'file',
         'file_type',
         'is_read',
+        'edited_date',
     ];
 
     public function sender()

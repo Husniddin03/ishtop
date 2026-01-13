@@ -107,11 +107,13 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->string('redirect')->nullable();
             $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
             $table->text('message')->nullable();
             $table->string('file')->nullable();
             $table->string('file_type')->nullable();
             $table->boolean('is_read')->default(false);
+            $table->timestamp('edited_date')->nullable();
             $table->timestamps();
         });
 

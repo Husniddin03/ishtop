@@ -11,7 +11,7 @@
                 <div class="flex items-center content-center gap-4">
                     <div class="w-12 h-12 rounded-full mb-3">
                         <img src="{{ $user->avatar ? Storage::url($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=6366f1&color=fff&size=128' }}"
-                            alt="User avatar displayed as a circular image" class="w-full h-full rounded-full">
+                            alt="User" class="w-full h-full rounded-full">
                     </div>
                     <div>
                         <p class="font-medium text-gray-800">{{ $user->name }}</p>

@@ -57,23 +57,28 @@
                     </svg>
                     Orqaga
                 </a>
-                @if (auth()->user()->id == $work->user->id)
-                    <button
-                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Ariza holati faol
-                    </button>
+
+                @if ($work->when >= now())
+                    <a href="{{ route('chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}"
+                        class=" {{ auth()->user()->id == $work->user->id ? 'cursor-not-allowed hidden' : '' }} inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Ariza berish {{ ceil(abs($work->when->diffInDays(now()))) }} kun qoldi
+                        </div>
+                    </a>
                 @else
                     <button
-                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Ariza berish
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-300 text-gray-600 font-semibold rounded-lg cursor-not-allowed shadow-md">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Ariza berish vaqti o'tib ketgan
+                        </div>
                     </button>
                 @endif
 
@@ -305,7 +310,8 @@
                                         </svg>
                                     </div>
                                     <p class="text-sm font-medium text-gray-600 mb-2">Boshlanish sanasi</p>
-                                    <p class="text-lg font-bold text-gray-900">{{ $work->when->format('d F Y') }}</p>
+                                    <p class="text-lg font-bold text-gray-900">
+                                        {{ $work->when->locale('uz_Latn')->translatedFormat('j F Y') }}</p>
                                 </div>
 
                                 <!-- Work Hours -->

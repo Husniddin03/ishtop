@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Work;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
@@ -29,6 +32,7 @@ class ChatController extends Controller
         if (Auth::id() == $id) {
             return redirect()->route('allchat');
         }
+        $work = Work::find(request()->get('work_id')) ?? null;
         $user = User::findOrFail($id);
         $messages = Message::where(function ($query) use ($id) {
             $query->where('sender_id', Auth::id())
@@ -38,7 +42,7 @@ class ChatController extends Controller
                 ->where('receiver_id', Auth::id());
         })->orderBy('created_at', 'asc')->get();
 
-        return view('user.chat', compact('user', 'messages'));
+        return view('user.chat', compact('user', 'messages', 'work'));
     }
 
     public function send(Request $request, $id)
@@ -46,6 +50,7 @@ class ChatController extends Controller
 
         $request->validate([
             'message' => 'required_without:file|string|max:1000',
+            'redirect' => 'nullable|string',
             'file' => 'nullable|file|max:5120', // Max 5MB
         ]);
 
@@ -53,6 +58,7 @@ class ChatController extends Controller
         $message->sender_id = Auth::id();
         $message->receiver_id = $id;
         $message->message = $request->input('message');
+        $message->redirect = $request->input('redirect');
 
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('chat_files', 'public');
@@ -77,6 +83,7 @@ class ChatController extends Controller
             $message->save();
         }
 
+
         return response()->json(['status' => 'success']);
     }
 
@@ -95,6 +102,7 @@ class ChatController extends Controller
 
         $message->update([
             'message' => $request->input('message'),
+            'edited_date' => Carbon::now(),
         ]);
 
         return response()->json(['status' => 'success']);
