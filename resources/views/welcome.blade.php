@@ -163,11 +163,11 @@
                                 <i class="fas fa-search mr-2"></i>Ishlarni Ko'rish
                             </a>
                         @else
-                            <a href="{{ route('worker.create') }}"
+                            <a href="{{ route('workers.create') }}"
                                 class="bg-white text-indigo-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105">
                                 <i class="fas fa-briefcase mr-2"></i>Ishchi Bo'ling
                             </a>
-                            <a href="{{ route('work.create') }}"
+                            <a href="{{ route('works.create') }}"
                                 class="bg-yellow-400 text-gray-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-500 transition transform hover:scale-105">
                                 <i class="fas fa-user-tie mr-2"></i>Ish Beruvchi Bo'ling
                             </a>
