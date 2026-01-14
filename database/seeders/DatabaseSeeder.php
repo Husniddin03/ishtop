@@ -27,65 +27,65 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('330440311'),
         ]);
 
-        // 10 ta oddiy user yaratish
-        User::factory(10)->create()->each(function ($user) {
-            // Har bir user uchun wallet yaratish
-            $q = Wallet::factory()->create(['user_id' => $user->id]);
+        // // 10 ta oddiy user yaratish
+        // User::factory(10)->create()->each(function ($user) {
+        //     // Har bir user uchun wallet yaratish
+        //     $q = Wallet::factory()->create(['user_id' => $user->id]);
 
-            // Har bir user uchun card data yaratish
-            CardData::factory()->create(['wallet_id' => $q->id]);
+        //     // Har bir user uchun card data yaratish
+        //     CardData::factory()->create(['wallet_id' => $q->id]);
 
-            // Har bir user uchun contact yaratish
-            UserContact::factory()->create(['user_id' => $user->id]);
+        //     // Har bir user uchun contact yaratish
+        //     UserContact::factory()->create(['user_id' => $user->id]);
 
-            // Har bir user uchun user data yaratish
-            UserData::factory()->create(['user_id' => $user->id]);
-        });
+        //     // Har bir user uchun user data yaratish
+        //     UserData::factory()->create(['user_id' => $user->id]);
+        // });
 
-        // 5 ta worker yaratish
-        User::factory(5)->create()->each(function ($user) {
-            // User uchun asosiy ma'lumotlar
-            $we = Wallet::factory()->create(['user_id' => $user->id]);
-            CardData::factory()->create(['wallet_id' => $we->id]);
-            UserContact::factory()->create(['user_id' => $user->id]);
-            UserData::factory()->create(['user_id' => $user->id]);
+        // // 5 ta worker yaratish
+        // User::factory(5)->create()->each(function ($user) {
+        //     // User uchun asosiy ma'lumotlar
+        //     $we = Wallet::factory()->create(['user_id' => $user->id]);
+        //     CardData::factory()->create(['wallet_id' => $we->id]);
+        //     UserContact::factory()->create(['user_id' => $user->id]);
+        //     UserData::factory()->create(['user_id' => $user->id]);
 
-            // Worker sifatida ro'yxatga olish
-            Worker::factory()->create(['user_id' => $user->id]);
-        });
+        //     // Worker sifatida ro'yxatga olish
+        //     Worker::factory()->create(['user_id' => $user->id]);
+        // });
 
-        // 20 ta work e'lon yaratish
-        User::factory(8)->create()->each(function ($user) {
-            // User uchun asosiy ma'lumotlar
-            $w = Wallet::factory()->create(['user_id' => $user->id]);
-            CardData::factory()->create(['wallet_id' => $w->id]);
-            UserContact::factory()->create(['user_id' => $user->id]);
-            UserData::factory()->create(['user_id' => $user->id]);
+        // // 20 ta work e'lon yaratish
+        // User::factory(8)->create()->each(function ($user) {
+        //     // User uchun asosiy ma'lumotlar
+        //     $w = Wallet::factory()->create(['user_id' => $user->id]);
+        //     CardData::factory()->create(['wallet_id' => $w->id]);
+        //     UserContact::factory()->create(['user_id' => $user->id]);
+        //     UserData::factory()->create(['user_id' => $user->id]);
 
-            // Har bir user uchun 2-3 ta work yaratish
-            Work::factory(rand(2, 3))->create(['user_id' => $user->id])->each(function ($work) {
-                // Har bir work uchun 2-5 ta rasm qo'shish
-                WorkImage::factory(rand(2, 5))->create(['work_id' => $work->id]);
-            });
-        });
+        //     // Har bir user uchun 2-3 ta work yaratish
+        //     Work::factory(rand(2, 3))->create(['user_id' => $user->id])->each(function ($work) {
+        //         // Har bir work uchun 2-5 ta rasm qo'shish
+        //         WorkImage::factory(rand(2, 5))->create(['work_id' => $work->id]);
+        //     });
+        // });
 
-        // Test user yaratish
-        $testUser = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        // // Test user yaratish
+        // $testUser = User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        //     'password' => bcrypt('password'),
+        // ]);
 
-        $wallet = Wallet::factory()->create(['user_id' => $user1->id, 'balanse' => 100]);
-        CardData::factory()->create(['wallet_id' => $wallet->id]);
-        UserContact::factory()->create(['user_id' => $user1->id]);
-        UserData::factory()->create(['user_id' => $user1->id]);
-        Worker::factory()->create(['user_id' => $user1->id]);
+        // $wallet = Wallet::factory()->create(['user_id' => $user1->id, 'balanse' => 100]);
+        // CardData::factory()->create(['wallet_id' => $wallet->id]);
+        // UserContact::factory()->create(['user_id' => $user1->id]);
+        // UserData::factory()->create(['user_id' => $user1->id]);
+        // Worker::factory()->create(['user_id' => $user1->id]);
 
-        // Test user uchun bir nechta work yaratish
-        Work::factory(3)->create(['user_id' => $testUser->id])->each(function ($work) {
-            WorkImage::factory(3)->create(['work_id' => $work->id]);
-        });
+        // // Test user uchun bir nechta work yaratish
+        // Work::factory(3)->create(['user_id' => $testUser->id])->each(function ($work) {
+        //     WorkImage::factory(3)->create(['work_id' => $work->id]);
+        // });
 
         $this->region();
     }
