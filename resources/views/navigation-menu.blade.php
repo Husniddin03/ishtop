@@ -42,7 +42,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <div class="flex items-center gap-3 space-x-2 p-4">
 
-                    <div class="flex items-center">
+                    {{-- <div class="flex items-center">
                         <svg class="w-6 h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -54,10 +54,10 @@
                         <span class="text-lg font-semibold text-gray-800">
                             {{ $balanse }}
                         </span>
-                    </div>
+                    </div> --}}
 
 
-                    <div class="ms-3 relative">
+                    {{-- <div class="ms-3 relative">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <a href="#" class="text-blue-500">
@@ -88,7 +88,7 @@
                                 </ul>
                             </x-slot>
                         </x-dropdown>
-                    </div>
+                    </div> --}}
 
                     <a href="{{ route('allchat') }}" class="text-blue-500 relative">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -159,7 +159,7 @@
             <div class="-me-2 flex items-center sm:hidden">
                 <div class="flex items-center gap-3 space-x-2 p-4">
 
-                    <div class="flex items-center">
+                    {{-- <div class="flex items-center">
                         <svg class="w-6 h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -171,8 +171,8 @@
                         <span class="text-lg font-semibold text-gray-800">
                             {{ $balanse }}
                         </span>
-                    </div>
-                    <div class="ms-3 relative">
+                    </div> --}}
+                    {{-- <div class="ms-3 relative">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <a href="#" class="text-blue-500">
@@ -203,7 +203,7 @@
                                 </ul>
                             </x-slot>
                         </x-dropdown>
-                    </div>
+                    </div> --}}
                     <a href="{{ route('allchat') }}" class="text-blue-500 relative">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="size-6">

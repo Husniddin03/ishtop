@@ -105,7 +105,7 @@
                             <div id="redirect-work-user-message"
                                 class="flex w-full items-center justify-between border-b p-4">
                                 <a href="{{ route('works.show', $work->id) }}"
-                                    class="text-indigo-600 text-sm flex items-center gap-2" id="redirect-message">
+                                    class="text-indigo-600 text-sm flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -116,7 +116,7 @@
                                             yuborish</span>
                                     </p>
                                 </a>
-                                <input type="hidden" name="redirect" value="work_{{ $work->id }}" id="">
+                                <input type="hidden" name="redirect" value="work_{{ $work->id }}" id="work_{{ $work->id }}">
                                 <button type="button"
                                     onclick="document.getElementById('redirect-work-user-message').classList.add('hidden'); window.location.href = '/chat/{{ $user->id }}';"
                                     class="text-gray-500 hover:text-indigo-600 me-2">
@@ -129,8 +129,7 @@
                         @endif
                         <div id="redirect-to-message"
                             class="flex w-full items-center justify-between border-b p-4 hidden">
-                            <a href="#" class="text-indigo-600 text-sm flex items-center gap-2"
-                                id="redirect-message">
+                            <a id="redirect-to-message-link" href="#" class="text-indigo-600 text-sm flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -143,7 +142,7 @@
                             </a>
                             <input type="hidden" name="redirect" value="" id="message-redirect-input">
                             <button type="button"
-                                onclick="document.getElementById('redirect-to-message').classList.add('hidden');"
+                                onclick="document.getElementById('redirect-to-message').classList.add('hidden'); window.location.href = '/chat/{{ $user->id }}';"
                                 class="text-gray-500 hover:text-indigo-600 me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -348,29 +347,36 @@
 
                         }
 
-                        function redirectMessage(id) {
+                        function redirectToMessage(id) {
                             e.preventDefault(); // default anchor harakatini to‘xtatamiz
 
                             document.querySelectorAll('.highlight').forEach(el => {
                                 el.classList.remove('highlight');
                             });
 
-                            const messageElement = document.getElementById(`${id}`);
-                            if (messageElement) {
+                            const redirectLinkMessage = document.getElementById('redirect-to-message-link');
+
+                            const messageLinkElement = document.getElementById(`${id}`);
+                            if (messageLinkElement) {
                                 // Smooth scroll
-                                messageElement.scrollIntoView({
+                                messageLinkElement.scrollIntoView({
                                     behavior: 'smooth',
                                     block: 'center'
                                 });
 
                                 // Highlight class qo‘shamiz
-                                messageElement.classList.add('highlight');
+                                messageLinkElement.classList.add('highlight');
 
                                 // Animatsiya tugagach classni olib tashlaymiz
                                 setTimeout(() => {
-                                    messageElement.classList.remove('highlight');
+                                    messageLinkElement.classList.remove('highlight');
                                 }, 1000);
                             }
+
+                            const messageElement = document.getElementById(id);
+                            const messageLinkPosition = messageElement.offsetTop;
+
+                            redirectLinkMessage.href = `#${id}`;
                         }
                     </script>
 

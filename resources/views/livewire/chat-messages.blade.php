@@ -63,7 +63,7 @@
                         $redirectMessage = \App\Models\Message::find($redirectId);
                     @endphp
                     @if ($redirectMessage)
-                        <div onclick="redirectMessage('message_{{ $redirectId }}')">
+                        <div onclick="redirectToMessage('message_{{ $redirectId }}')">
                             <a id="go-message" href="#"
                                 class="text-indigo-600 text-sm flex items-center gap-2 mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -159,6 +159,24 @@
                             <p>Ishni ko'rish</p>
                         </a>
                     </div>
+                @elseif (strpos($message->redirect, 'message_') !== false)
+                    @php
+                        $redirectId = explode('_', $message->redirect)[1];
+                        $redirectMessage = \App\Models\Message::find($redirectId);
+                    @endphp
+                    @if ($redirectMessage)
+                        <div onclick="redirectToMessage('message_{{ $redirectId }}')">
+                            <a id="go-message" href="#"
+                                class="text-indigo-600 text-sm flex items-center gap-2 mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
+                                </svg>
+                                <p>{{ substr($redirectMessage->message, 0, 20) }}...</p>
+                            </a>
+                        </div>
+                    @endif
                 @endif
                 <div class="relative">
                     <x-dropdown align="left" width="48">
@@ -173,25 +191,15 @@
 
                         <x-slot name="content">
 
-                            <x-dropdown-link href="#">
-                                {{ __('Ulashish') }}
-                            </x-dropdown-link>
+                            <x-dropdown-button data-message="{{ $message->message }}"
+                                onclick="redirectMessage('{{ $message->id }}', this.dataset.message)">
+                                {{ __('Javob berish') }}
+                            </x-dropdown-button>
 
                             <x-dropdown-button data-message="{{ $message->message }}"
                                 onclick="copyMessage(this.dataset.message)">
                                 {{ __('Nusxa olish') }}
                             </x-dropdown-button>
-
-                            <div class="border-t border-gray-200"></div>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="#" x-data>
-                                @csrf
-
-                                <x-dropdown-link href="#" @click.prevent="$root.submit();">
-                                    {{ __('Atmetka') }}
-                                </x-dropdown-link>
-                            </form>
                         </x-slot>
                     </x-dropdown>
                 </div>

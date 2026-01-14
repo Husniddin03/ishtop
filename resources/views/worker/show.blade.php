@@ -55,14 +55,16 @@
                     </svg>
                     Orqaga
                 </a>
-                <button
-                    class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                    Taklif yuborish
-                </button>
+                @if ($worker->user->id !== auth()->user()->id)
+                    <a href="{{ route('chat', ['id' => $worker->user->id, 'worker_id' => $worker->id]) }}"
+                        class="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Taklif yuborish
+                    </a>
+                @endif
             </div>
         </div>
     </x-slot>
@@ -152,8 +154,7 @@
                                                 <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
                                                     <defs>
                                                         <linearGradient id="half-star-{{ $worker->id }}"
-                                                            x1="0%" y1="0%" x2="100%"
-                                                            y2="0%">
+                                                            x1="0%" y1="0%" x2="100%" y2="0%">
                                                             <stop offset="50%" stop-color="#FBBF24" />
                                                             <stop offset="50%" stop-color="#D1D5DB" />
                                                         </linearGradient>
@@ -652,10 +653,14 @@
                     </div>
 
                     <!-- Call to Action -->
-                    <button
-                        class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg rounded-2xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 active:scale-95">
-                        Ish taklifini yuborish
-                    </button>
+                    @if ($worker->user->id !== auth()->user()->id)
+                       <a href="{{ route('chat', $worker->id) }}">
+                         <button
+                            class="w-full py-4 bg-gradient-to-r mt-5 from-emerald-500 to-teal-600 text-white font-bold text-lg rounded-2xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 active:scale-95">
+                            Xabar yozish
+                        </button>
+                       </a>
+                    @endif
 
                 </div>
             </div>

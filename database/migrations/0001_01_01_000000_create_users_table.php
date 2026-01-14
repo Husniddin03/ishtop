@@ -20,6 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('avatar', 2048)->nullable();
+            $table->boolean('notifications')->default(true);
             $table->timestamp('last_seen_at')->nullable();
             $table->timestamps();
         });

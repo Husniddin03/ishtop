@@ -58,7 +58,7 @@
                     Orqaga
                 </a>
 
-                @if ($work->when >= now())
+                @if (\Carbon\Carbon::parse($work->when)->setTime(23, 59) >= now())
                     <a href="{{ route('chat', ['id' => $work->user->id, 'work_id' => $work->id]) }}"
                         class=" {{ auth()->user()->id == $work->user->id ? 'cursor-not-allowed hidden' : '' }} inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
                         <div class="flex items-center gap-2">
@@ -66,7 +66,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Ariza berish {{ ceil(abs($work->when->diffInDays(now()))) }} kun qoldi
+                            Ariza berish {{ ceil(abs($work->when->diffInDays(now()))) == 1 ? 'bugun' : ceil(abs($work->when->diffInDays(now()))) . ' kun' }} qoldi
                         </div>
                     </a>
                 @else
